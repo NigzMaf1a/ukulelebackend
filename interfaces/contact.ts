@@ -1,7 +1,6 @@
 import { RowDataPacket } from "mysql2";
 
 export interface ContactPayload{
-    ContactID:number;
     PhoneNo:string;
     EmailAddress:string;
     Instagram:string;

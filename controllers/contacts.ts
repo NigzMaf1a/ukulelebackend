@@ -12,7 +12,7 @@ export const createContact:RequestHandler = async (req: Request, res: Response) 
         res.status(201).json(result);
     } catch(err){
         const message = err instanceof Error ? err.message : 'Unknown error';
-        res.status(500).json({ error: 'Failed to create user', details: message });
+        res.status(500).json({ error: 'Failed to create contact', details: message });
     }
 };
 
