@@ -54,7 +54,7 @@ app.use((req: Request, res: Response) => {
 app.use(errorHandler);
 
 const server = app.listen(PORT, () => {
-  console.log(`Aurum Domus backend running at http://localhost:${PORT}`);
+  console.log(`Ukulele band backend running at http://localhost:${PORT}`);
 });
 
 async function gracefulShutdown() {
