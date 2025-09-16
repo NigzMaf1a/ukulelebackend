@@ -1,23 +1,30 @@
+// interfaces/dispatch.ts
+
 import { RowDataPacket } from "mysql2";
 
-export interface DispatchPayload{
-    DispatchID:number;
-    CustomerID:number;
-    Name:string;
-    Location:string;
-    ServiceID:number;
-    PhoneNo:string;
-    Dispatched: 'Yes' | 'No';
-    DispatchDate:string;
+/**
+ * Row returned from DB (all fields including PK)
+ */
+export interface DispatchRow extends RowDataPacket {
+  DispatchID: number;
+  CustomerID: number;
+  Name: string;
+  dLocation: string;
+  ServiceID: number;
+  PhoneNo: string;
+  Dispatched: "Yes" | "No";
+  DispatchDate: Date;
 }
 
-export interface DispatchRow extends RowDataPacket{
-    DispatchID:number;
-    CustomerID:number;
-    Name:string;
-    Location:string;
-    ServiceID:number;
-    PhoneNo:string;
-    Dispatched: 'Yes' | 'No';
-    DispatchDate:string;
+/**
+ * Data used to create a new Dispatch row (no PK)
+ */
+export interface DispatchPayload {
+  CustomerID: number;
+  Name: string;
+  dLocation: string;
+  ServiceID: number;
+  PhoneNo: string;
+  Dispatched?: "Yes" | "No"; // optional → defaults to "No"
+  DispatchDate?: Date;
 }
