@@ -30,6 +30,7 @@ import dispatchManagerRoutes from "./routes/dispatchManager";
 import financeManagerRoutes from "./routes/financeManager";
 import SoundSystemRoutes from './routes/soundsystem';
 import bandRoutes from './routes/band';
+import adminRoutes from "./routes/admin";
 
 import authMiddleware from './middleware/auth';
 import errorHandler from './middleware/errorHandler';
@@ -82,7 +83,8 @@ app.use("/api/serviceManager", servicesManagerRoutes);
 app.use("/api/dispatchManager", dispatchManagerRoutes);
 app.use("/api/financeManager", financeManagerRoutes);
 app.use("/api/soundSytem", SoundSystemRoutes);
-app.use("/api/band", bandRoutes)
+app.use("/api/band", bandRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Ukulele Band API is up' });

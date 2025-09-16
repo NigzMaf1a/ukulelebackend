@@ -6,6 +6,7 @@ export interface FinanceRow extends RowDataPacket {
   Name: string;
   PhoneNo: string;
   TransactionID: number;
+  TransactionName: string; 
   TransactionDate: Date;
   Amount: number;
   TransactType: "Deposit" | "Payment";
@@ -16,6 +17,7 @@ export interface FinancePayload {
   CustomerID: number;
   Name: string;
   PhoneNo: string;
+  TransactionName: string; 
   TransactionDate: Date;
   Amount: number;
   TransactType: "Deposit" | "Payment";
