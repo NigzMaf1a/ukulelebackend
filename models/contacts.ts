@@ -1,44 +1,64 @@
 import db from '../utils/db';
-import { ResultSetHeader} from 'mysql2';
-import {ContactRow, ContactPayload} from '../interfaces/contact';
+import { ResultSetHeader } from 'mysql2';
+import { ContactRow, ContactPayload } from '../interfaces/contact';
 
-export default class Contacts{
-    constructor(){}
+export default class Contacts {
+    constructor() {}
 
-    async createContact(data:ContactPayload):Promise<{ message: string; id: number }>{
-        const sql = `INSERT INTO Contact () VALUES ()`;
-        const [result] = await db.execute<ResultSetHeader>(sql, [
-            data.PhoneNo,
-            data.Instagram,
-            data.Facebook,
-            data.EmailAddress,
-            data.PoBox
-        ]);
-        return {message:'Contact created successfully', id:result.insertId};
+    /**
+     * Create or replace the contact record
+     * (singleton table — only one row exists)
+     */
+    async createContact(data: ContactPayload): Promise<{ message: string }> {
+        // First check if a record exists
+        const [rows] = await db.execute<ContactRow[]>(`SELECT * FROM Contact`);
+        if (rows.length > 0) {
+            // Replace existing row
+            const sql = `
+                UPDATE Contact
+                SET PhoneNo = ?, Instagram = ?, Facebook = ?, EmailAddress = ?, POBox = ?
+            `;
+            await db.execute<ResultSetHeader>(sql, [
+                data.PhoneNo,
+                data.Instagram,
+                data.Facebook,
+                data.EmailAddress,
+                data.PoBox
+            ]);
+            return { message: 'Contact updated successfully' };
+        } else {
+            // Insert new row
+            const sql = `
+                INSERT INTO Contact
+                    (PhoneNo, Instagram, Facebook, EmailAddress, POBox)
+                VALUES (?, ?, ?, ?, ?)
+            `;
+            await db.execute<ResultSetHeader>(sql, [
+                data.PhoneNo,
+                data.Instagram,
+                data.Facebook,
+                data.EmailAddress,
+                data.PoBox
+            ]);
+            return { message: 'Contact created successfully' };
+        }
     }
 
-    async readContact():Promise<ContactRow[]>{
-        const sql = `SELECT * FROM Contact`;
+    /**
+     * Read the contact record (singleton)
+     */
+    async readContact(): Promise<ContactRow | undefined> {
+        const sql = `SELECT * FROM Contact LIMIT 1`;
         const [rows] = await db.execute<ContactRow[]>(sql);
-        return rows;
+        return rows[0];
     }
 
-    async updateContact(ContactID:number, data:ContactPayload):Promise<{ message: string; affectedRows: number }>{
-        const sql = ``;
-        const [result] = await db.execute<ResultSetHeader>(sql, [
-            data.PhoneNo,
-            data.Instagram,
-            data.Facebook,
-            data.EmailAddress,
-            data.PoBox,
-            ContactID
-        ]);
-        return { message: 'Contact updated', affectedRows: result.affectedRows }
-    }
-
-    async deleteContact(ContactID:number):Promise<{ message: string; affectedRows: number }>{
-        const sql =  ``;
-        const [result] = await db.execute<ResultSetHeader>(sql, [ContactID]);
-        return { message: 'Contact deleted', affectedRows: result.affectedRows }
+    /**
+     * Delete the contact record
+     */
+    async deleteContact(): Promise<{ message: string; affectedRows: number }> {
+        const sql = `DELETE FROM Contact`;
+        const [result] = await db.execute<ResultSetHeader>(sql);
+        return { message: 'Contact deleted', affectedRows: result.affectedRows };
     }
 }
