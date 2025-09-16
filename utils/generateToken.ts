@@ -2,15 +2,24 @@ import jwt from 'jsonwebtoken';
 
 export interface UserRecord {
   RegID: number;
-  Name1: string;
-  Name2: string;
+  Name: string;
   PhoneNo: string;
   Email: string;
   Gender: 'Male' | 'Female';
-  RegType: "Customer" | "Manager" | "Accountant" | "Waiter" | "Chef" | "Owner" | "Admin" ;
+  RegType:
+    | "Customer"
+    | "DJ"
+    | "Mcee"
+    | "Storeman"
+    | "Accountant"
+    | "Dispatchman"
+    | "Inspector"
+    | "Band"
+    | "Admin"
+    | "Supplier";
   dLocation?: string;
   accStatus: 'Pending' | 'Approved' | 'Inactive';
-  UserImage?: string;
+  Photo?: string;
   lastAccessed: string;
 }
 

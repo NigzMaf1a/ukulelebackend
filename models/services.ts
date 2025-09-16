@@ -53,19 +53,22 @@ export default class ServicesModel {
     return rows;
   }
 
-  /**
-   * Fetch a single service by ID
-   */
   async getServiceById(serviceID: number): Promise<ServicesRow | undefined> {
     const sql = `SELECT * FROM Services WHERE ServiceID = ?`;
     const [rows] = await db.execute<ServicesRow[]>(sql, [serviceID]);
     return rows[0];
   }
 
-  /**
-   * Full update (all fields)
-   * ⚠️ Use with caution — for admin-level changes.
-   */
+  async getServicePaymentandStatus(): Promise<ServicesRow | undefined> {
+    //Double check
+    //For the service manager
+    const paid:string = 'Paid';
+    const status:string = 'Pending';
+    const sql = `SELECT * FROM Services WHERE PaymentStatus = ?`;
+    const [rows] = await db.execute<ServicesRow[]>(sql, [paid]);
+    return rows[0];
+  }
+
   async updateService(
     serviceID: number,
     data: Partial<ServicesPayload>
@@ -91,10 +94,6 @@ export default class ServicesModel {
     return { message: "Service updated", affectedRows: result.affectedRows };
   }
 
-  /**
-   * Update only the ServiceStatus
-   * (Action: Service Manager)
-   */
   async updateServiceStatus(
     serviceID: number,
     status: ServicesRow["ServiceStatus"]
@@ -108,10 +107,6 @@ export default class ServicesModel {
     return { message: "ServiceStatus updated", affectedRows: result.affectedRows };
   }
 
-  /**
-   * Update only the PaymentStatus
-   * (Action: Accountant)
-   */
   async updatePaymentStatus(
     serviceID: number,
     payment: ServicesRow["PaymentStatus"]
@@ -125,9 +120,6 @@ export default class ServicesModel {
     return { message: "PaymentStatus updated", affectedRows: result.affectedRows };
   }
 
-  /**
-   * Delete a service by ID
-   */
   async deleteService(
     serviceID: number
   ): Promise<{ message: string; affectedRows: number }> {

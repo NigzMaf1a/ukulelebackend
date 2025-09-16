@@ -1,8 +1,5 @@
 import { RowDataPacket } from "mysql2";
 
-/**
- * Mirrors the Registration table exactly
- */
 export interface RegistrationRow extends RowDataPacket {
   RegID: number;
   Name: string;
@@ -41,9 +38,6 @@ export interface RegistrationRow extends RowDataPacket {
   lastAccessed: Date;
 }
 
-/**
- * Data required for creating/updating a Registration row
- */
 export interface RegistrationPayload {
   Name: string;
   PhoneNo: string;

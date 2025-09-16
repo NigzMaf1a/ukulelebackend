@@ -1,9 +1,5 @@
-// services.ts
 import { RowDataPacket } from "mysql2";
 
-/**
- * Mirrors the Services table exactly
- */
 export interface ServicesRow extends RowDataPacket {
   ServiceID: number;
   CustomerID: number;
@@ -28,9 +24,6 @@ export interface ServicesPayload {
   PaymentStatus?: "Paid" | "Not Paid";
 }
 
-/**
- * Mirrors the Lending table exactly
- */
 export interface LendingRow extends RowDataPacket {
   LendID: number;
   EquipmentID: number;
@@ -39,11 +32,8 @@ export interface LendingRow extends RowDataPacket {
   Hours: number;
   ServiceID: number;
   LendingStatus: "Done" | "Yet";
+  Performed:"Yes" | "No";
 }
-
-/**
- * Data required for creating/updating a Lending row
- */
 export interface LendingPayload {
   EquipmentID: number;
   LendingDate: Date;
@@ -51,6 +41,7 @@ export interface LendingPayload {
   Hours: number;
   ServiceID: number;
   LendingStatus?: "Done" | "Yet";
+  Performed:"Yes" | "No";
 }
 
 /**
