@@ -16,4 +16,5 @@ export interface BookingRow extends RowDataPacket{
     Cost:number;
     Hours:number;
     BookStatus:'Tick' | 'Untick';
+    Performed: 'Yes' | 'No';
 }

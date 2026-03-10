@@ -13,10 +13,10 @@ const router = Router();
 
 router.post("/add", createService);
 router.get("/get", getAllServices);
-router.get("/:serviceID", getServiceById);
-router.put("/:serviceID", updateService);
+router.get("/get/byid/:serviceID", getServiceById);
+router.put("/put/:serviceID", updateService);
 router.patch("/:serviceID/status", updateServiceStatus); // update ServiceStatus only
 router.patch("/:serviceID/payment", updatePaymentStatus); // update PaymentStatus only
-router.delete("/:serviceID", deleteService);
+router.delete("/delete/:serviceID", deleteService);
 
 export default router;

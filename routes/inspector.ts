@@ -11,8 +11,8 @@ const router = Router();
 
 router.post("/add", createInspector);
 router.get("/get", getAllInspectors);
-router.get("/:inspectionID", getInspectorById);
-router.put("/:inspectionID", updateInspector);
-router.delete("/:inspectionID", deleteInspector);
+router.get("/get/byid/:inspectionID", getInspectorById);
+router.put("/put/:inspectionID", updateInspector);
+router.delete("/delete/:inspectionID", deleteInspector);
 
 export default router;

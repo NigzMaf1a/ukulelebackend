@@ -3,17 +3,9 @@ import { ResultSetHeader } from "mysql2";
 import { RegistrationPayload, RegistrationRow } from "../interfaces/registration";
 import { CustomerPayload, CustomerRow } from "../interfaces/customer";
 
-/**
- * Customer model
- * Handles Registration + Customer inserts and joins
- */
 export default class Customer {
   constructor() {}
 
-  /**
-   * Create a Registration record and its matching Customer record.
-   * Returns both IDs.
-   */
   async createCustomerWithRegistration(
     regData: RegistrationPayload
   ): Promise<{ message: string; regID: number; customerID: number }> {
@@ -69,9 +61,6 @@ export default class Customer {
     }
   }
 
-  /**
-   * Read all customers (with Registration join)
-   */
   async readCustomersWithRegistration(): Promise<
     (CustomerRow & Partial<RegistrationRow>)[]
   > {
@@ -84,9 +73,6 @@ export default class Customer {
     return rows;
   }
 
-  /**
-   * Fetch a single customer + registration info
-   */
   async getCustomerData(
     customerID: number
   ): Promise<(CustomerRow & RegistrationRow) | undefined> {
@@ -102,9 +88,6 @@ export default class Customer {
     return rows[0];
   }
 
-  /**
-   * Update customer table only
-   */
   async updateCustomer(
     customerID: number,
     data: CustomerPayload
@@ -124,9 +107,6 @@ export default class Customer {
     return { message: "Customer updated", affectedRows: result.affectedRows };
   }
 
-  /**
-   * Delete a customer (does NOT remove Registration row)
-   */
   async deleteCustomer(
     customerID: number
   ): Promise<{ message: string; affectedRows: number }> {

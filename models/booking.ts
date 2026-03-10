@@ -1,4 +1,3 @@
-// models/booking.ts
 import db from "../utils/db";
 import { ResultSetHeader } from "mysql2";
 import { BookingRow, BookingPayload } from "../interfaces/services";

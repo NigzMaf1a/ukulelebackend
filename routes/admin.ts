@@ -14,6 +14,11 @@ import {
   getInventory,
   getFinances,
   getSupplies,
+  approvePendingUser,
+  deactivateActiveUser,
+  activateInactiveUser,
+  updateAbout,
+  getLoggedInAdmin
 } from "../controllers/admin";
 
 const router = Router();
@@ -37,5 +42,14 @@ router.get("/inspection", getInspection);
 router.get("/inventory", getInventory);
 router.get("/finances", getFinances);
 router.get("/supplies", getSupplies);
+
+//User operations
+router.patch("/approve/:regID", approvePendingUser);
+router.patch("/deactivate/:regID", deactivateActiveUser);
+router.patch("/activate/:regID", activateInactiveUser);
+
+//misc
+router.put('/about/update', updateAbout)
+router.get("/logged/:id", getLoggedInAdmin);
 
 export default router;

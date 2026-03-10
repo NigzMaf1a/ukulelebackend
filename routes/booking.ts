@@ -11,8 +11,8 @@ const router = Router();
 
 router.post("/add", createBooking);
 router.get("/get", getAllBookings);
-router.get("/:bookingID", getBookingById);
-router.put("/:bookingID", updateBooking);
-router.delete("/:bookingID", deleteBooking);
+router.get("/get/byid/:bookingID", getBookingById);
+router.put("/put/:bookingID", updateBooking);
+router.delete("/delete/:bookingID", deleteBooking);
 
 export default router;

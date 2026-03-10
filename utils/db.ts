@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// ---- Validate required env vars ----
+// Validate required env vars
 const requiredEnvVars = ['DB_HOST', 'DB_USER', 'DB_PASSWORD', 'DB_NAME'] as const;
 for (const key of requiredEnvVars) {
   if (!process.env[key]) {
@@ -11,7 +11,7 @@ for (const key of requiredEnvVars) {
   }
 }
 
-// ---- Create the pool ----
+// Create the pool
 const poolConfig: PoolOptions = {
   host: process.env.DB_HOST!,
   user: process.env.DB_USER!,
@@ -26,7 +26,7 @@ const pool: Pool = mysql.createPool(poolConfig);
 
 console.log(`✅ MySQL pool created for DB: ${process.env.DB_NAME} @ ${process.env.DB_HOST}`);
 
-// ---- Health check ----
+// Health check
 (async () => {
   try {
     await pool.query('SELECT 1');
@@ -37,7 +37,7 @@ console.log(`✅ MySQL pool created for DB: ${process.env.DB_NAME} @ ${process.e
   }
 })();
 
-// ---- Typed query helper ----
+// Typed query helper
 export async function query<T extends RowDataPacket>(
   sql: string,
   params?: ReadonlyArray<unknown>
@@ -65,7 +65,7 @@ export async function query<T extends RowDataPacket>(
   }
 }
 
-// ---- Graceful shutdown ----
+// Graceful shutdown
 async function shutdownPool() {
   console.log('🔌 Closing MySQL connection pool...');
   await pool.end();

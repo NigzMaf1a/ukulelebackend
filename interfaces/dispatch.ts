@@ -12,7 +12,7 @@ export interface DispatchRow extends RowDataPacket {
   dLocation: string;
   ServiceID: number;
   PhoneNo: string;
-  Dispatched: "Yes" | "No";
+  Dispatched: 'Pending' | 'Dispatched' | 'Packed' | 'Returned';
   DispatchDate: Date;
 }
 
@@ -25,6 +25,6 @@ export interface DispatchPayload {
   dLocation: string;
   ServiceID: number;
   PhoneNo: string;
-  Dispatched?: "Yes" | "No"; // optional → defaults to "No"
+  Dispatched?: 'Pending' | 'Dispatched' | 'Packed' | 'Returned';
   DispatchDate?: Date;
 }

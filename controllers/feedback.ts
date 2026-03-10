@@ -1,11 +1,8 @@
-// controllers/feedbackController.ts
+
 import { Request, Response, RequestHandler } from "express";
 import Feedback from "../models/feedback";
 import { FeedbackPayload } from "../interfaces/feedback";
 
-/**
- * CREATE - Add a new feedback record
- */
 export const createFeedback = async (req: Request, res: Response) => {
   try {
     const payload: FeedbackPayload = req.body;
@@ -18,9 +15,6 @@ export const createFeedback = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * READ - Get all feedback records
- */
 export const readFeedback: RequestHandler = async (_req, res, next) => {
   try {
     const feedback = new Feedback();
@@ -31,9 +25,6 @@ export const readFeedback: RequestHandler = async (_req, res, next) => {
   }
 };
 
-/**
- * GET - Single feedback record by ID
- */
 export const getFeedbackData = async (req: Request, res: Response) => {
   const id = Number(req.params.feedbackID);
   if (isNaN(id)) {
@@ -57,9 +48,6 @@ export const getFeedbackData = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * UPDATE - Edit a feedback record
- */
 export const updateFeedback = async (req: Request, res: Response) => {
   const id = Number(req.params.feedbackID);
   if (isNaN(id)) {
@@ -78,9 +66,6 @@ export const updateFeedback = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * DELETE - Remove a feedback record
- */
 export const deleteFeedback: RequestHandler = async (req, res, next) => {
   const id = Number(req.params.feedbackID);
   if (isNaN(id)) {

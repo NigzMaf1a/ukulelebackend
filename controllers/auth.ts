@@ -1,12 +1,11 @@
-import { RequestHandler } from 'express'
-import pool from '../utils/db'
-import generateToken from '../utils/generateToken'
-import bcrypt from 'bcryptjs'
-
+import { RequestHandler } from 'express';
+import pool from '../utils/db';
+import generateToken from '../utils/generateToken';
+import bcrypt from 'bcryptjs';
 
 export interface User {
-  RegID: number;         
-  Name: string;                         
+  RegID: number;
+  Name: string;
   PhoneNo: string;
   Email: string;
   Password: string;
@@ -22,18 +21,17 @@ export interface User {
     | "Band"
     | "Admin"
     | "Supplier";
-  dLocation?: string;     
-  accStatus: 'Pending' | 'Approved' |'Inactive';
-  Photo?: string; 
-  lastAccessed: string;    
+  dLocation?: string;
+  accStatus: 'Pending' | 'Approved' | 'Inactive';
+  Photo?: string;
+  lastAccessed: string;
 }
 
 export const login: RequestHandler = async (req, res) => {
-  const { Email, UserPassword } = req.body;
+  const { Email, Password } = req.body;
   const trimmedEmail = String(Email).trim();
-  const trimmedPassword = String(UserPassword).trim();
-
-  console.log('For starters......')
+  const trimmedPassword = String(Password).trim();
+  console.log('Trimmed Email:', trimmedEmail);
 
   if (!trimmedEmail || !trimmedPassword) {
     res.status(400).json({ error: 'Email and password required' });
@@ -50,26 +48,37 @@ export const login: RequestHandler = async (req, res) => {
       return;
     }
 
-    const isMatch = await bcrypt.compare(trimmedPassword, String(user.Password));
+    // First try hashed password
+    let isMatch = false;
+    try {
+      isMatch = await bcrypt.compare(trimmedPassword, String(user.Password));
+    } catch {
+      isMatch = false;
+    }
+
+    // If bcrypt fails, fallback to plain text comparison
+    if (!isMatch && trimmedPassword === user.Password) {
+      isMatch = true;
+    }
+
     if (!isMatch) {
       res.status(401).json({ error: 'Invalid email or password' });
       return;
     }
-    console.log('Almost there')
 
     const token = generateToken(user);
-    console.log(`Token: ${token}`);
 
     res.json({
       token,
       user: {
         RegID: user.RegID,
         Email: user.Email,
-        RegType: user.RegType
+        RegType: user.RegType,
+        accStatus:user.accStatus
       }
     });
   } catch (err) {
     console.error('Login error:', (err as Error).message);
     res.status(500).json({ error: 'Server error during login' });
   }
-}
+};

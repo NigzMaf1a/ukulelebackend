@@ -9,6 +9,7 @@ export interface FinanceRow extends RowDataPacket {
   TransactionName: string; 
   TransactionDate: Date;
   Amount: number;
+  TransactionStatus: 'Pending' | 'Approved' | 'Rejected';
   TransactType: "Deposit" | "Payment";
   ServiceID: number;
 }
@@ -20,6 +21,7 @@ export interface FinancePayload {
   TransactionName: string; 
   TransactionDate: Date;
   Amount: number;
+  TransactionStatus: 'Pending' | 'Approved' | 'Rejected';
   TransactType: "Deposit" | "Payment";
   ServiceID: number;
 }

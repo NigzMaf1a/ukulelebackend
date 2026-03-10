@@ -153,19 +153,19 @@ export default class Admin {
     }
 
     async updateAbout(detail: string): Promise<boolean> {
-        try {
-            const query = `
-                UPDATE About
-                SET Detail = ?
-                LIMIT 1
-            `;
-            const [result] = await db.execute<ResultSetHeader>(query, [detail]);
-            return result.affectedRows > 0;
-        } catch (error) {
-            console.error("Error updating About detail:", error);
-            throw error;
-        }
+    try {
+        const query = `
+        UPDATE About
+        SET Detail = ?
+        `;
+        const [result] = await db.execute<ResultSetHeader>(query, [detail]);
+        return result.affectedRows > 0;
+    } catch (error) {
+        console.error("Error updating About detail:", error);
+        throw error;
     }
+    }
+
     async updateContacts(payload: ContactPayload): Promise<boolean> {
         try {
             const query = `
@@ -282,4 +282,20 @@ export default class Admin {
             throw error;
         }
     }
+  async loggedInAdmin(RegID: number): Promise<RegistrationRow[]> {
+    try {
+        const query = `
+        SELECT * 
+        FROM Registration
+        WHERE RegID = ?
+        LIMIT 1
+        `;
+        // mysql2 execute returns [rows, fields], so we destructure
+        const [rows] = await db.execute<RegistrationRow[]>(query, [RegID]);
+        return rows;
+    } catch (err) {
+        console.error("Error fetching admin record:", err);
+        throw err;
+    }
+  }
 }

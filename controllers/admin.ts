@@ -142,3 +142,76 @@ export const getSupplies = async (_req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to fetch supplies" });
   }
 };
+
+export async function approvePendingUser(req: Request, res: Response) {
+  try {
+    const regID = Number(req.params.regID);
+    const success = await adminService.approvePendingUser(regID);
+    if (!success) return res.status(404).json({ message: "User not found or not pending" });
+    res.json({ success: true, message: "User approved" });
+  } catch (err) {
+    console.error("Controller error (approvePendingUser):", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+/** Deactivate a currently active user */
+export async function deactivateActiveUser(req: Request, res: Response) {
+  try {
+    const regID = Number(req.params.regID);
+    const success = await adminService.deactivateActiveUser(regID);
+    if (!success) return res.status(404).json({ message: "User not found or not active" });
+    res.json({ success: true, message: "User deactivated" });
+  } catch (err) {
+    console.error("Controller error (deactivateActiveUser):", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+/** Reactivate a previously inactive user */
+export async function activateInactiveUser(req: Request, res: Response) {
+  try {
+    const regID = Number(req.params.regID);
+    const success = await adminService.activateInactiveUser(regID);
+    if (!success) return res.status(404).json({ message: "User not found or not inactive" });
+    res.json({ success: true, message: "User reactivated (set back to Pending)" });
+  } catch (err) {
+    console.error("Controller error (activateInactiveUser):", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export async function updateAbout(req:Request, res:Response){
+  try{
+    const detail = String(req.params.Detail)
+    const success = await adminService.updateAbout(detail);
+    if (!success) return res.status(404).json({ message: "About not updated" });
+    res.json({ success: true, message: "About updated" });
+  } catch(err){
+    console.error("Controller error (updateAbout):", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export const getLoggedInAdmin = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params; // /admin/:id
+    const RegID = parseInt(id, 10);
+
+    if (isNaN(RegID)) {
+      return res.status(400).json({ error: "Invalid RegID" });
+    }
+
+    const adminRows = await adminService.loggedInAdmin(RegID);
+
+    if (adminRows.length === 0) {
+      return res.status(404).json({ error: "Admin not found" });
+    }
+
+    return res.status(200).json(adminRows[0]); // return the single row
+  } catch (err) {
+    console.error("Controller error:", err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+

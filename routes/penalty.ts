@@ -11,8 +11,8 @@ const router = Router();
 
 router.post("/add", createPenalty);
 router.get("/get", getAllPenalties);
-router.get("/:penaltyID", getPenaltyById);
-router.put("/:penaltyID", updatePenalty);
-router.delete("/:penaltyID", deletePenalty);
+router.get("/get/byid/:penaltyID", getPenaltyById);
+router.put("/put/:penaltyID", updatePenalty);
+router.delete("/delete/:penaltyID", deletePenalty);
 
 export default router;

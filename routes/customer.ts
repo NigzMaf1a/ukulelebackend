@@ -11,8 +11,8 @@ const router = Router();
 
 router.post("/add", createCustomer);
 router.get("/get", getAllCustomers);
-router.get("/:customerID", getCustomerById);
-router.put("/:customerID", updateCustomer);
-router.delete("/:customerID", deleteCustomer);
+router.get("/get/byid/:customerID", getCustomerById);
+router.put("/put/:customerID", updateCustomer);
+router.delete("/delete/:customerID", deleteCustomer);
 
 export default router;

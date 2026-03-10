@@ -31,6 +31,12 @@ import financeManagerRoutes from "./routes/financeManager";
 import SoundSystemRoutes from './routes/soundsystem';
 import bandRoutes from './routes/band';
 import adminRoutes from "./routes/admin";
+import allocatedEquipmentRoutes from './routes/allocatedEquipment';
+import penaltyPaymentRoutes from './routes/penaltyPayment';
+import orderPaymentRoutes from './routes/orderPayments';
+import orderItemRoutes from './routes/orderItem';
+import orderRoutes from './routes/orders';
+
 
 import authMiddleware from './middleware/auth';
 import errorHandler from './middleware/errorHandler';
@@ -42,12 +48,12 @@ app.use(helmet());
 
 const allowedOrigins = process.env.CLIENT_ORIGIN
   ? [process.env.CLIENT_ORIGIN]
-  : ['http://localhost:3000','http://localhost:5000'];
+  : ['http://localhost:5173','http://localhost:5000'];
 
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   })
@@ -82,9 +88,14 @@ app.use('/api/supply', supplyRoutes);
 app.use("/api/serviceManager", servicesManagerRoutes);
 app.use("/api/dispatchManager", dispatchManagerRoutes);
 app.use("/api/financeManager", financeManagerRoutes);
-app.use("/api/soundSytem", SoundSystemRoutes);
+app.use("/api/soundSystem", SoundSystemRoutes);
 app.use("/api/band", bandRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/allocatedEquipment", allocatedEquipmentRoutes);
+app.use("/api/penaltyPayment", penaltyPaymentRoutes);
+app.use("/api/orderPayment", orderPaymentRoutes);
+app.use("/api/orderItem", orderItemRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Ukulele Band API is up' });
@@ -101,7 +112,7 @@ const server = app.listen(PORT, () => {
 });
 
 async function gracefulShutdown() {
-  console.log('💀 Graceful shutdown initiated');
+  console.log(' Graceful shutdown initiated');
   server.close(() => {
     console.log('HTTP server closed');
     // await dbPool.end();

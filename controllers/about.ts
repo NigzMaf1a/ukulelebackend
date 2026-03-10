@@ -1,4 +1,3 @@
-// controllers/about.ts
 import { Request, Response, RequestHandler } from "express";
 import AboutModel from "../models/about";
 import { AboutPayload } from "../interfaces/about";
