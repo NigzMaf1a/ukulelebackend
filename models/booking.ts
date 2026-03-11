@@ -1,6 +1,7 @@
 import db from "../utils/db";
 import { ResultSetHeader } from "mysql2";
-import { BookingRow, BookingPayload } from "../interfaces/services";
+import { BookingPayload } from "../interfaces/services";
+import { BookingRow } from "../interfaces/booking";
 
 /**
  * BookingModel

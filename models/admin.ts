@@ -4,8 +4,8 @@ import { RegistrationRow, RegistrationPayload } from "../interfaces/registration
 import { FeedbackRow, FeedbackPayload } from "../interfaces/feedback";
 import { AboutRow, AboutPayload } from "../interfaces/about";
 import { ContactRow, ContactPayload } from "../interfaces/contact";
-import { BookingRow } from "../interfaces/services";
-import { LendingRow } from "../interfaces/services";
+import { BookingRow } from "../interfaces/band";
+import LendingRow from "../interfaces/services";
 import { PenaltyRow } from "../interfaces/penalty";
 import { InspectorRow } from "../interfaces/inspector";
 import { InventoryRow } from "../interfaces/inventory";

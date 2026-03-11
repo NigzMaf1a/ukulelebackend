@@ -1,5 +1,8 @@
 import { RowDataPacket } from "mysql2";
 
+/**
+ * Services table row
+ */
 export interface ServicesRow extends RowDataPacket {
   ServiceID: number;
   CustomerID: number;
@@ -12,7 +15,7 @@ export interface ServicesRow extends RowDataPacket {
 }
 
 /**
- * Data required for creating/updating a Services row
+ * Payload for creating/updating a Services row
  */
 export interface ServicesPayload {
   CustomerID: number;
@@ -24,30 +27,37 @@ export interface ServicesPayload {
   PaymentStatus?: "Paid" | "Not Paid";
 }
 
-export interface LendingRow extends RowDataPacket {
+/**
+ * Lending table row
+ */
+export default interface LendingRow extends RowDataPacket {
   LendID: number;
-  EquipmentID: number;
+  Genre: "Reggae" | "Rhumba" | "Zilizopendwa" | "Benga" | "Soul" | "RnB";
   LendingDate: Date;
   Cost: number;
   Hours: number;
   ServiceID: number;
   LendingStatus: "Done" | "Yet";
-  Performed:"Yes" | "No";
+  Performed: "Yes" | "No";
 }
+
+/**
+ * Payload for creating/updating a Lending row
+ */
 export interface LendingPayload {
-  EquipmentID: number;
+  Genre: "Reggae" | "Rhumba" | "Zilizopendwa" | "Benga" | "Soul" | "RnB";
   LendingDate: Date;
   Cost: number;
   Hours: number;
   ServiceID: number;
   LendingStatus?: "Done" | "Yet";
-  Performed:"Yes" | "No";
+  Performed: "Yes" | "No";
 }
 
 /**
- * Mirrors the Booking table exactly
+ * Booking table row
  */
-export interface BookingRow extends RowDataPacket {
+export default interface BookingRow extends RowDataPacket {
   BookingID: number;
   Genre: "Reggae" | "Rhumba" | "Zilizopendwa" | "Benga" | "Soul" | "RnB";
   BookingDate: Date;
@@ -58,7 +68,7 @@ export interface BookingRow extends RowDataPacket {
 }
 
 /**
- * Data required for creating/updating a Booking row
+ * Payload for creating/updating a Booking row
  */
 export interface BookingPayload {
   Genre: "Reggae" | "Rhumba" | "Zilizopendwa" | "Benga" | "Soul" | "RnB";

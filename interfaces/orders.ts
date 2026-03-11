@@ -5,12 +5,12 @@ export default interface OrderRow extends RowDataPacket{
     SupplyID:number;
     OrderDate:Date;
     OrderAmount:number;
-    OrderStatus: 'Processing' | 'Hauled' | 'Delivered' | 'Cancelled';
+    OrderStatus: 'Processing' | 'Hauled' | 'Delivered' | 'Paid' | 'Cancelled';
 }
 
 export interface OrderPayload{
     SupplyID:number;
     OrderDate:Date;
     OrderAmount:number;
-    OrderStatus: 'Processing' | 'Hauled' | 'Delivered' | 'Cancelled';
+    OrderStatus: 'Processing' | 'Hauled' | 'Delivered' | 'Paid' | 'Cancelled';
 }

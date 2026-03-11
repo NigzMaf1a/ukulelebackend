@@ -1,7 +1,8 @@
 // models/lending.ts
 import db from "../utils/db";
 import { ResultSetHeader } from "mysql2";
-import { LendingRow, LendingPayload } from "../interfaces/services";
+import { LendingPayload } from "../interfaces/services";
+import LendingRow from "../interfaces/services";
 
 /**
  * LendingModel
@@ -18,12 +19,11 @@ export default class LendingModel {
   ): Promise<{ message: string; lendID: number }> {
     const sql = `
       INSERT INTO Lending
-        (EquipmentID, LendingDate, Cost, Hours, ServiceID, LendingStatus)
+        ( LendingDate, Cost, Hours, ServiceID, LendingStatus)
       VALUES (?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await db.execute<ResultSetHeader>(sql, [
-      payload.EquipmentID,
       payload.LendingDate,
       payload.Cost,
       payload.Hours,
@@ -64,12 +64,11 @@ export default class LendingModel {
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
       UPDATE Lending
-      SET EquipmentID = ?, LendingDate = ?, Cost = ?, Hours = ?, ServiceID = ?, LendingStatus = ?
+      LendingDate = ?, Cost = ?, Hours = ?, ServiceID = ?, LendingStatus = ?
       WHERE LendID = ?
     `;
 
     const [result] = await db.execute<ResultSetHeader>(sql, [
-      data.EquipmentID,
       data.LendingDate,
       data.Cost,
       data.Hours,
