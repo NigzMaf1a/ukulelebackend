@@ -33,6 +33,7 @@ import penaltyPaymentRoutes from './routes/penaltyPayment';
 import orderPaymentRoutes from './routes/orderPayments';
 import orderItemRoutes from './routes/orderItem';
 import orderRoutes from './routes/orders';
+import registrationRoutes from "./routes/registration";
 
 
 import authMiddleware from './middleware/auth';
@@ -69,7 +70,7 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use('/api/auth', authRoutes);
 app.use('/api/about', aboutRoutes);
 app.use('/api/booking', bookingRoutes);
-app.use('/api/contacts', authMiddleware, contactRoutes);
+app.use('/api/contacts', contactRoutes);
 app.use('/api/dispatch', dispatchRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/finance', financeRoutes);
@@ -90,6 +91,7 @@ app.use("/api/penaltyPayment", penaltyPaymentRoutes);
 app.use("/api/orderPayment", orderPaymentRoutes);
 app.use("/api/orderItem", orderItemRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/registration", registrationRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Ukulele Band API is up' });

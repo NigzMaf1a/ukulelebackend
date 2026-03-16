@@ -19,7 +19,7 @@ export default class DispatchModel {
       payload.dLocation,
       payload.ServiceID,
       payload.PhoneNo,
-      payload.Dispatched ?? "No",
+      payload.Dispatched ?? "Pending",
       payload.DispatchDate ?? new Date(),
     ]);
     return { message: "Dispatch created successfully", dispatchID: rows[0].DispatchID };
