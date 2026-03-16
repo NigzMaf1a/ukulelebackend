@@ -5,6 +5,7 @@ export interface UserRecord {
   Name: string;
   PhoneNo: string;
   Email: string;
+  Password:string;
   Gender: 'Male' | 'Female';
   RegType:
     | "Customer"
@@ -21,6 +22,8 @@ export interface UserRecord {
   accStatus: 'Pending' | 'Approved' | 'Inactive';
   Photo?: string;
   lastAccessed: string;
+
+  [key: string]: unknown;
 }
 
 // ---- Payload stored in JWT ----
