@@ -1,9 +1,11 @@
+// login.ts
 import { RequestHandler } from 'express';
-import pool from '../utils/db';
+import { query } from '../utils/db'; // use the typed query helper
 import generateToken from '../utils/generateToken';
 import bcrypt from 'bcryptjs';
+import { QueryResultRow } from 'pg';
 
-export interface User {
+export interface User extends QueryResultRow{
   RegID: number;
   Name: string;
   PhoneNo: string;
@@ -29,23 +31,23 @@ export interface User {
 
 export const login: RequestHandler = async (req, res) => {
   const { Email, Password } = req.body;
-  const trimmedEmail = String(Email).trim();
-  const trimmedPassword = String(Password).trim();
-  console.log('Trimmed Email:', trimmedEmail);
+  const trimmedEmail = String(Email || '').trim();
+  const trimmedPassword = String(Password || '').trim();
 
   if (!trimmedEmail || !trimmedPassword) {
-    res.status(400).json({ error: 'Email and password required' });
-    return;
+    return res.status(400).json({ error: 'Email and password required' });
   }
 
   try {
-    const [rows] = await pool.query('SELECT * FROM registration WHERE Email = ?', [trimmedEmail]);
-    const users = rows as User[];
+    // Correct Postgres placeholder usage ($1)
+    const users = await query<User>(
+      'SELECT * FROM registration WHERE Email = $1',
+      [trimmedEmail]
+    );
 
     const user = users[0];
     if (!user) {
-      res.status(401).json({ error: 'Invalid email or password' });
-      return;
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     // First try hashed password
@@ -56,29 +58,28 @@ export const login: RequestHandler = async (req, res) => {
       isMatch = false;
     }
 
-    // If bcrypt fails, fallback to plain text comparison
+    // Fallback to plain text
     if (!isMatch && trimmedPassword === user.Password) {
       isMatch = true;
     }
 
     if (!isMatch) {
-      res.status(401).json({ error: 'Invalid email or password' });
-      return;
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
 
     const token = generateToken(user);
 
-    res.json({
+    return res.json({
       token,
       user: {
         RegID: user.RegID,
         Email: user.Email,
         RegType: user.RegType,
-        accStatus:user.accStatus
-      }
+        accStatus: user.accStatus,
+      },
     });
   } catch (err) {
     console.error('Login error:', (err as Error).message);
-    res.status(500).json({ error: 'Server error during login' });
+    return res.status(500).json({ error: 'Server error during login' });
   }
 };

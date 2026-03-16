@@ -1,7 +1,5 @@
-// models/Payment.ts
-import db from "../utils/db";
-import { ResultSetHeader } from "mysql2";
-import { PaymentRow, PaymentPayload } from "../interfaces/payment";
+import { query } from "../utils/db";
+import {PaymentRow, PaymentPayload } from "../interfaces/payment";
 
 export default class Payment {
   constructor() {}
@@ -13,20 +11,18 @@ export default class Payment {
     data: PaymentPayload
   ): Promise<{ message: string; id: number }> {
     const sql = `
-      INSERT INTO Payment
-        (MemberID, Name, PhoneNo, Amount, Date)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO Payment (MemberID, Name, PhoneNo, Amount, Date)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING ProcessID
     `;
-
-    const [result] = await db.execute<ResultSetHeader>(sql, [
+    const rows = await query<{ ProcessID: number }>(sql, [
       data.MemberID,
       data.Name,
       data.PhoneNo,
       data.Amount,
       data.Date,
     ]);
-
-    return { message: "Payment record created", id: result.insertId };
+    return { message: "Payment record created", id: rows[0].ProcessID };
   }
 
   /**
@@ -34,8 +30,7 @@ export default class Payment {
    */
   async readPayments(): Promise<PaymentRow[]> {
     const sql = `SELECT * FROM Payment`;
-    const [rows] = await db.execute<PaymentRow[]>(sql);
-    return rows;
+    return await query<PaymentRow>(sql);
   }
 
   /**
@@ -47,11 +42,10 @@ export default class Payment {
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
       UPDATE Payment
-      SET MemberID = ?, Name = ?, PhoneNo = ?, Amount = ?, Date = ?
-      WHERE ProcessID = ?
+      SET MemberID = $1, Name = $2, PhoneNo = $3, Amount = $4, Date = $5
+      WHERE ProcessID = $6
     `;
-
-    const [result] = await db.execute<ResultSetHeader>(sql, [
+    const res = await query(sql, [
       data.MemberID,
       data.Name,
       data.PhoneNo,
@@ -59,8 +53,7 @@ export default class Payment {
       data.Date,
       processID,
     ]);
-
-    return { message: "Payment record updated", affectedRows: result.affectedRows };
+    return { message: "Payment record updated", affectedRows: (res as any).rowCount || 0 };
   }
 
   /**
@@ -69,9 +62,9 @@ export default class Payment {
   async deletePayment(
     processID: number
   ): Promise<{ message: string; affectedRows: number }> {
-    const sql = `DELETE FROM Payment WHERE ProcessID = ?`;
-    const [result] = await db.execute<ResultSetHeader>(sql, [processID]);
-    return { message: "Payment record deleted", affectedRows: result.affectedRows };
+    const sql = `DELETE FROM Payment WHERE ProcessID = $1`;
+    const res = await query(sql, [processID]);
+    return { message: "Payment record deleted", affectedRows: (res as any).rowCount || 0 };
   }
 
   /**
@@ -80,8 +73,8 @@ export default class Payment {
   async getPaymentData(
     processID: number
   ): Promise<PaymentRow | undefined> {
-    const sql = `SELECT * FROM Payment WHERE ProcessID = ?`;
-    const [rows] = await db.execute<PaymentRow[]>(sql, [processID]);
+    const sql = `SELECT * FROM Payment WHERE ProcessID = $1`;
+    const rows = await query<PaymentRow>(sql, [processID]);
     return rows[0];
   }
 }

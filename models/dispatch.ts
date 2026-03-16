@@ -1,31 +1,19 @@
-// models/dispatch.ts
-import db from "../utils/db";
-import { ResultSetHeader } from "mysql2";
+import { query } from "../utils/db";
 import { DispatchRow, DispatchPayload } from "../interfaces/dispatch";
 
-/**
- * DispatchModel
- * Handles CRUD for the Dispatch table
- */
 export default class DispatchModel {
   constructor() {}
 
-  /**
-   * Create a new dispatch record
-   * Defaults:
-   *  - Dispatched = "No"
-   *  - DispatchDate = today (if not provided)
-   */
   async createDispatch(
     payload: DispatchPayload
   ): Promise<{ message: string; dispatchID: number }> {
     const sql = `
       INSERT INTO Dispatch
         (CustomerID, Name, dLocation, ServiceID, PhoneNo, Dispatched, DispatchDate)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING DispatchID
     `;
-
-    const [result] = await db.execute<ResultSetHeader>(sql, [
+    const rows = await query<{ DispatchID: number }>(sql, [
       payload.CustomerID,
       payload.Name,
       payload.dLocation,
@@ -34,48 +22,31 @@ export default class DispatchModel {
       payload.Dispatched ?? "No",
       payload.DispatchDate ?? new Date(),
     ]);
-
-    return {
-      message: "Dispatch created successfully",
-      dispatchID: result.insertId,
-    };
+    return { message: "Dispatch created successfully", dispatchID: rows[0].DispatchID };
   }
 
-  /**
-   * Get all dispatch records
-   */
   async getAllDispatches(): Promise<DispatchRow[]> {
     const sql = `SELECT * FROM Dispatch`;
-    const [rows] = await db.execute<DispatchRow[]>(sql);
-    return rows;
+    return await query<DispatchRow>(sql);
   }
 
-  /**
-   * Get a single dispatch by ID
-   */
-  async getDispatchById(
-    dispatchID: number
-  ): Promise<DispatchRow | undefined> {
-    const sql = `SELECT * FROM Dispatch WHERE DispatchID = ?`;
-    const [rows] = await db.execute<DispatchRow[]>(sql, [dispatchID]);
+  async getDispatchById(dispatchID: number): Promise<DispatchRow | undefined> {
+    const sql = `SELECT * FROM Dispatch WHERE DispatchID = $1`;
+    const rows = await query<DispatchRow>(sql, [dispatchID]);
     return rows[0];
   }
 
-  /**
-   * Update an existing dispatch
-   */
   async updateDispatch(
     dispatchID: number,
     data: Partial<DispatchPayload>
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
       UPDATE Dispatch
-      SET CustomerID = ?, Name = ?, dLocation = ?, ServiceID = ?,
-          PhoneNo = ?, Dispatched = ?, DispatchDate = ?
-      WHERE DispatchID = ?
+      SET CustomerID = $1, Name = $2, dLocation = $3, ServiceID = $4,
+          PhoneNo = $5, Dispatched = $6, DispatchDate = $7
+      WHERE DispatchID = $8
     `;
-
-    const [result] = await db.execute<ResultSetHeader>(sql, [
+    const res = await query(sql, [
       data.CustomerID,
       data.Name,
       data.dLocation,
@@ -85,21 +56,14 @@ export default class DispatchModel {
       data.DispatchDate,
       dispatchID,
     ]);
-
-    return {
-      message: "Dispatch updated",
-      affectedRows: result.affectedRows,
-    };
+    return { message: "Dispatch updated", affectedRows: (res as any).rowCount || 0 };
   }
 
-  /**
-   * Delete a dispatch record
-   */
   async deleteDispatch(
     dispatchID: number
   ): Promise<{ message: string; affectedRows: number }> {
-    const sql = `DELETE FROM Dispatch WHERE DispatchID = ?`;
-    const [result] = await db.execute<ResultSetHeader>(sql, [dispatchID]);
-    return { message: "Dispatch deleted", affectedRows: result.affectedRows };
+    const sql = `DELETE FROM Dispatch WHERE DispatchID = $1`;
+    const res = await query(sql, [dispatchID]);
+    return { message: "Dispatch deleted", affectedRows: (res as any).rowCount || 0 };
   }
 }

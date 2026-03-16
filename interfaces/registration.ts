@@ -1,4 +1,5 @@
 import { RowDataPacket } from "mysql2";
+import { QueryResultRow } from "pg";
 
 export interface RegistrationRow extends RowDataPacket {
   RegID: number;

@@ -1,28 +1,19 @@
-import db from "../utils/db";
-import { ResultSetHeader } from "mysql2";
+import { query } from "../utils/db";
 import { BookingPayload } from "../interfaces/services";
 import { BookingRow } from "../interfaces/booking";
 
-/**
- * BookingModel
- * Handles CRUD for the Booking table
- */
 export default class BookingModel {
   constructor() {}
 
-  /**
-   * Create a new booking record
-   */
   async createBooking(
     payload: BookingPayload
-  ): Promise<{ message: string; bookingID: number }> {
+  ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
       INSERT INTO Booking
         (Genre, BookingDate, Cost, Hours, ServiceID, BookStatus)
-      VALUES (?, ?, ?, ?, ?, ?)
+      VALUES ($1, $2, $3, $4, $5, $6)
     `;
-
-    const [result] = await db.execute<ResultSetHeader>(sql, [
+    const res = await query(sql, [
       payload.Genre,
       payload.BookingDate,
       payload.Cost,
@@ -30,45 +21,30 @@ export default class BookingModel {
       payload.ServiceID,
       payload.BookStatus,
     ]);
-
-    return {
-      message: "Booking record created successfully",
-      bookingID: result.insertId,
-    };
+    return { message: "Booking record created successfully", affectedRows: (res as any).rowCount || 0 };
   }
 
-  /**
-   * Fetch all booking records
-   */
   async getAllBookings(): Promise<BookingRow[]> {
     const sql = `SELECT * FROM Booking`;
-    const [rows] = await db.execute<BookingRow[]>(sql);
-    return rows;
+    return await query<BookingRow>(sql);
   }
 
-  /**
-   * Fetch a single booking by ID
-   */
   async getBookingById(bookingID: number): Promise<BookingRow | undefined> {
-    const sql = `SELECT * FROM Booking WHERE BookingID = ?`;
-    const [rows] = await db.execute<BookingRow[]>(sql, [bookingID]);
+    const sql = `SELECT * FROM Booking WHERE BookingID = $1`;
+    const rows = await query<BookingRow>(sql, [bookingID]);
     return rows[0];
   }
 
-  /**
-   * Update an existing booking record
-   */
   async updateBooking(
     bookingID: number,
     data: Partial<BookingPayload>
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
       UPDATE Booking
-      SET Genre = ?, BookingDate = ?, Cost = ?, Hours = ?, ServiceID = ?, BookStatus = ?
-      WHERE BookingID = ?
+      SET Genre = $1, BookingDate = $2, Cost = $3, Hours = $4, ServiceID = $5, BookStatus = $6
+      WHERE BookingID = $7
     `;
-
-    const [result] = await db.execute<ResultSetHeader>(sql, [
+    const res = await query(sql, [
       data.Genre,
       data.BookingDate,
       data.Cost,
@@ -77,21 +53,14 @@ export default class BookingModel {
       data.BookStatus,
       bookingID,
     ]);
-
-    return {
-      message: "Booking record updated",
-      affectedRows: result.affectedRows,
-    };
+    return { message: `Booking ${bookingID} updated`, affectedRows: (res as any).rowCount || 0 };
   }
 
-  /**
-   * Delete a booking by ID
-   */
   async deleteBooking(
     bookingID: number
   ): Promise<{ message: string; affectedRows: number }> {
-    const sql = `DELETE FROM Booking WHERE BookingID = ?`;
-    const [result] = await db.execute<ResultSetHeader>(sql, [bookingID]);
-    return { message: "Booking record deleted", affectedRows: result.affectedRows };
+    const sql = `DELETE FROM Booking WHERE BookingID = $1`;
+    const res = await query(sql, [bookingID]);
+    return { message: `Booking ${bookingID} deleted`, affectedRows: (res as any).rowCount || 0 };
   }
 }

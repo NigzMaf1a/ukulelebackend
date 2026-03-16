@@ -1,85 +1,64 @@
-// models/Inspector.ts
-import db from "../utils/db";
-import { ResultSetHeader } from "mysql2";
+import { query } from "../utils/db";
 import { InspectorRow, InspectorPayload } from "../interfaces/inspector";
 
-export default class Inspector {
+export default class InspectorModel {
   constructor() {}
 
-  /**
-   * Create a new inspection record
-   */
   async createInspector(
     data: InspectorPayload
   ): Promise<{ message: string; id: number }> {
     const sql = `
       INSERT INTO Inspector
         (EquipmentID, InspectionDate, InspectorName, Condition)
-      VALUES (?, ?, ?, ?)
+      VALUES ($1, $2, $3, $4)
+      RETURNING InspectionID
     `;
-
-    const [result] = await db.execute<ResultSetHeader>(sql, [
+    const rows = await query<{ InspectionID: number }>(sql, [
       data.EquipmentID,
       data.InspectionDate,
       data.InspectorName,
       data.Condition,
     ]);
-
-    return { message: "Inspection created", id: result.insertId };
+    return { message: "Inspection created", id: rows[0].InspectionID };
   }
 
-  /**
-   * Read all inspection records
-   */
   async readInspectors(): Promise<InspectorRow[]> {
     const sql = `SELECT * FROM Inspector`;
-    const [rows] = await db.execute<InspectorRow[]>(sql);
-    return rows;
+    return await query<InspectorRow>(sql);
   }
 
-  /**
-   * Update an inspection record
-   */
   async updateInspector(
     inspectionID: number,
     data: InspectorPayload
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
       UPDATE Inspector
-      SET EquipmentID = ?, InspectionDate = ?, InspectorName = ?, Condition = ?
-      WHERE InspectionID = ?
+      SET EquipmentID = $1, InspectionDate = $2, InspectorName = $3, Condition = $4
+      WHERE InspectionID = $5
     `;
-
-    const [result] = await db.execute<ResultSetHeader>(sql, [
+    const res = await query(sql, [
       data.EquipmentID,
       data.InspectionDate,
       data.InspectorName,
       data.Condition,
       inspectionID,
     ]);
-
-    return { message: "Inspection updated", affectedRows: result.affectedRows };
+    return { message: "Inspection updated", affectedRows: (res as any).rowCount || 0 };
   }
 
-  /**
-   * Delete an inspection record
-   */
   async deleteInspector(
     inspectionID: number
   ): Promise<{ message: string; affectedRows: number }> {
-    const sql = `DELETE FROM Inspector WHERE InspectionID = ?`;
-    const [result] = await db.execute<ResultSetHeader>(sql, [inspectionID]);
-    return { message: "Inspection deleted", affectedRows: result.affectedRows };
+    const sql = `DELETE FROM Inspector WHERE InspectionID = $1`;
+    const res = await query(sql, [inspectionID]);
+    return { message: "Inspection deleted", affectedRows: (res as any).rowCount || 0 };
   }
 
-  /**
-   * Get one inspection record by ID
-   */
   async getInspectorData(
     inspectionID: number
   ): Promise<InspectorRow | undefined> {
-    const sql = `SELECT * FROM Inspector WHERE InspectionID = ?`;
-    const [rows] = await db.execute<InspectorRow[]>(sql, [inspectionID]);
+    const sql = `SELECT * FROM Inspector WHERE InspectionID = $1`;
+    const rows = await query<InspectorRow>(sql, [inspectionID]);
     return rows[0];
   }
 }

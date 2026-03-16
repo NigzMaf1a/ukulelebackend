@@ -1,57 +1,43 @@
-// models/Inventory.ts
-import db from "../utils/db";
-import { ResultSetHeader } from "mysql2";
+import { query } from "../utils/db";
 import { InventoryRow, InventoryPayload } from "../interfaces/inventory";
 
-export default class Inventory {
+export default class InventoryModel {
   constructor() {}
 
-  /**
-   * Create a new inventory record
-   */
   async createInventory(
     data: InventoryPayload
   ): Promise<{ message: string; id: number }> {
     const sql = `
       INSERT INTO Inventory
         (Price, Description, PurchaseDate, Condition, Availability)
-      VALUES (?, ?, ?, ?, ?)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING EquipmentID
     `;
-
-    const [result] = await db.execute<ResultSetHeader>(sql, [
+    const rows = await query<{ EquipmentID: number }>(sql, [
       data.Price,
       data.Description,
       data.PurchaseDate,
       data.Condition,
       data.Availability,
     ]);
-
-    return { message: "Inventory record created", id: result.insertId };
+    return { message: "Inventory record created", id: rows[0].EquipmentID };
   }
 
-  /**
-   * Get all inventory records
-   */
   async readInventory(): Promise<InventoryRow[]> {
     const sql = `SELECT * FROM Inventory`;
-    const [rows] = await db.execute<InventoryRow[]>(sql);
-    return rows;
+    return await query<InventoryRow>(sql);
   }
 
-  /**
-   * Update an existing inventory record
-   */
   async updateInventory(
     equipmentID: number,
     data: InventoryPayload
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
       UPDATE Inventory
-      SET Price = ?, Description = ?, PurchaseDate = ?, Condition = ?, Availability = ?
-      WHERE EquipmentID = ?
+      SET Price = $1, Description = $2, PurchaseDate = $3, Condition = $4, Availability = $5
+      WHERE EquipmentID = $6
     `;
-
-    const [result] = await db.execute<ResultSetHeader>(sql, [
+    const res = await query(sql, [
       data.Price,
       data.Description,
       data.PurchaseDate,
@@ -59,29 +45,22 @@ export default class Inventory {
       data.Availability,
       equipmentID,
     ]);
-
-    return { message: "Inventory record updated", affectedRows: result.affectedRows };
+    return { message: "Inventory record updated", affectedRows: (res as any).rowCount || 0 };
   }
 
-  /**
-   * Delete an inventory record
-   */
   async deleteInventory(
     equipmentID: number
   ): Promise<{ message: string; affectedRows: number }> {
-    const sql = `DELETE FROM Inventory WHERE EquipmentID = ?`;
-    const [result] = await db.execute<ResultSetHeader>(sql, [equipmentID]);
-    return { message: "Inventory record deleted", affectedRows: result.affectedRows };
+    const sql = `DELETE FROM Inventory WHERE EquipmentID = $1`;
+    const res = await query(sql, [equipmentID]);
+    return { message: "Inventory record deleted", affectedRows: (res as any).rowCount || 0 };
   }
 
-  /**
-   * Fetch one inventory record by ID
-   */
   async getInventoryData(
     equipmentID: number
   ): Promise<InventoryRow | undefined> {
-    const sql = `SELECT * FROM Inventory WHERE EquipmentID = ?`;
-    const [rows] = await db.execute<InventoryRow[]>(sql, [equipmentID]);
+    const sql = `SELECT * FROM Inventory WHERE EquipmentID = $1`;
+    const rows = await query<InventoryRow>(sql, [equipmentID]);
     return rows[0];
   }
 }

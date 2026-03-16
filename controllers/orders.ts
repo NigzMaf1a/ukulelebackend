@@ -6,23 +6,23 @@ import { OrderItemPayload } from "../interfaces/orderItem";
 /**
  * CREATE - Add a new order with items
  */
-export const createOrder = async (req: Request, res: Response) => {
-  try {
-    const payload: OrderPayload & { items: OrderItemPayload[] } = req.body;
+// export const createOrder = async (req: Request, res: Response) => {
+//   try {
+//     const payload: OrderPayload & { items: OrderItemPayload[] } = req.body;
 
-    if (!Array.isArray(payload.items) || payload.items.length === 0) {
-      return res.status(400).json({ error: "Order must include at least one item" });
-    }
+//     if (!Array.isArray(payload.items) || payload.items.length === 0) {
+//       return res.status(400).json({ error: "Order must include at least one item" });
+//     }
 
-    const order = new Orders();
-    const result = await order.createOrder(payload);
+//     const order = new Orders();
+//     const result = await order.createOrder(payload);
 
-    res.status(201).json(result);
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    res.status(500).json({ error: "Failed to create order", details: message });
-  }
-};
+//     res.status(201).json(result);
+//   } catch (err) {
+//     const message = err instanceof Error ? err.message : "Unknown error";
+//     res.status(500).json({ error: "Failed to create order", details: message });
+//   }
+// };
 
 /**
  * READ ALL - Get all orders

@@ -1,36 +1,32 @@
-import db from "../utils/db";
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { ServicesRow, ServicesPayload } from "../interfaces/services";
+import { query } from "../utils/db";
+import { ServicesRow } from "../interfaces/services";
 
 export default class ServiceManager {
-    constructor() {}
+  constructor() {}
 
-    async fetchPending(): Promise<ServicesRow[]> {
-        try {
-            const query = `
-                SELECT * FROM Services
-                WHERE PaymentStatus = 'Paid' AND ServiceStatus = 'Pending'
-            `;
-            const [rows] = await db.execute<ServicesRow[] & RowDataPacket[]>(query);
-            return rows;
-        } catch (error) {
-            console.error("Error fetching pending services:", error);
-            throw error;
-        }
-    }
+  /**
+   * Fetch all services that are Paid but still Pending
+   */
+  async fetchPending(): Promise<ServicesRow[]> {
+    const sql = `
+      SELECT *
+      FROM Services
+      WHERE PaymentStatus = 'Paid' AND ServiceStatus = 'Pending'
+    `;
+    return await query<ServicesRow>(sql);
+  }
 
-    async approvePending(serviceID: number): Promise<boolean> {
-        try {
-            const query = `
-                UPDATE Services
-                SET ServiceStatus = 'Approved'
-                WHERE ServiceID = ? AND ServiceStatus = 'Pending'
-            `;
-            const [result] = await db.execute<ResultSetHeader>(query, [serviceID]);
-            return result.affectedRows > 0;
-        } catch (error) {
-            console.error("Error approving service:", error);
-            throw error;
-        }
-    }
+  /**
+   * Approve a pending service by ID
+   * Returns true if a row was updated
+   */
+  async approvePending(serviceID: number): Promise<boolean> {
+    const sql = `
+      UPDATE Services
+      SET ServiceStatus = 'Approved'
+      WHERE ServiceID = ? AND ServiceStatus = 'Pending'
+    `;
+    const result = await query<{ affectedRows: number }>(sql, [serviceID]);
+    return (result as any).affectedRows > 0;
+  }
 }

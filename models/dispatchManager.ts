@@ -1,37 +1,24 @@
-// models/dispatchManager.ts
-import db from "../utils/db";
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { DispatchPayload, DispatchRow } from "../interfaces/dispatch";
+import { query } from "../utils/db";
+import { DispatchRow } from "../interfaces/dispatch";
 
 export default class DispatchManager {
-    constructor() {}
+  constructor() {}
 
-    async fetchUndispatched(): Promise<DispatchRow[]> {
-        try {
-            const query = `
-                SELECT * FROM Dispatch
-                WHERE Dispatched = 'No'
-            `;
-            const [rows] = await db.execute<DispatchRow[] & RowDataPacket[]>(query);
-            return rows;
-        } catch (error) {
-            console.error("Error fetching undispatched records:", error);
-            throw error;
-        }
-    }
+  async fetchUndispatched(): Promise<DispatchRow[]> {
+    const sql = `
+      SELECT * FROM Dispatch
+      WHERE Dispatched = 'No'
+    `;
+    return await query<DispatchRow>(sql);
+  }
 
-    async updateDispatch(dispatchID: number): Promise<boolean> {
-        try {
-            const query = `
-                UPDATE Dispatch
-                SET Dispatched = 'Yes'
-                WHERE DispatchID = ? AND Dispatched = 'No'
-            `;
-            const [result] = await db.execute<ResultSetHeader>(query, [dispatchID]);
-            return result.affectedRows > 0;
-        } catch (error) {
-            console.error("Error updating dispatch record:", error);
-            throw error;
-        }
-    }
+  async updateDispatch(dispatchID: number): Promise<{ message: string; affectedRows: number }> {
+    const sql = `
+      UPDATE Dispatch
+      SET Dispatched = 'Yes'
+      WHERE DispatchID = $1 AND Dispatched = 'No'
+    `;
+    const res = await query(sql, [dispatchID]);
+    return { message: "Dispatch updated", affectedRows: (res as any).rowCount || 0 };
+  }
 }

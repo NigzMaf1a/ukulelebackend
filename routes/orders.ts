@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import {
-  createOrder,
+  // createOrder,
   readOrders,
   updateOrder,
   deleteOrder,
@@ -10,7 +10,7 @@ import {
 
 const router = Router();
 
-router.post("/add", createOrder);
+// router.post("/add", createOrder);
 
 router.get("/get", readOrders);
 

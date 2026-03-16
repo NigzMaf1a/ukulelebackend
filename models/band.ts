@@ -1,21 +1,17 @@
-import db from "../utils/db";
-import { ResultSetHeader } from "mysql2";
+import { query } from "../utils/db";
 import { BookingRow } from "../interfaces/band";
 
 export default class Band {
-    constructor() {}
+  constructor() {}
 
-    // Get all bookings where BookStatus = 'Untick'
-    async getUntickedBookings(): Promise<BookingRow[]> {
-        const sql = `SELECT * FROM Booking WHERE BookStatus = 'Untick'`;
-        const [rows] = await db.execute<BookingRow[]>(sql);
-        return rows;
-    }
+  async getUntickedBookings(): Promise<BookingRow[]> {
+    const sql = `SELECT * FROM Booking WHERE BookStatus = 'Untick'`;
+    return await query<BookingRow>(sql);
+  }
 
-    // Update a booking to mark BookStatus = 'Tick' by BookingID
-    async updateBookingStatus(bookingID: number): Promise<boolean> {
-        const sql = `UPDATE Booking SET BookStatus = 'Tick' WHERE BookingID = ?`;
-        const [result] = await db.execute<ResultSetHeader>(sql, [bookingID]);
-        return result.affectedRows > 0; // returns true if updated
-    }
+  async updateBookingStatus(bookingID: number): Promise<{ message: string; affectedRows: number }> {
+    const sql = `UPDATE Booking SET BookStatus = 'Tick' WHERE BookingID = $1`;
+    const res = await query(sql, [bookingID]);
+    return { message: `Booking ${bookingID} marked as Tick`, affectedRows: (res as any).rowCount || 0 };
+  }
 }
