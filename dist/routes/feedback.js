@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const feedback_1 = require("../controllers/feedback");
+const router = (0, express_1.Router)();
+router.post('/add', feedback_1.createFeedback);
+router.get('/get', feedback_1.readFeedback);
+router.put('/put', feedback_1.updateFeedback);
+router.delete('/delete', feedback_1.deleteFeedback);
+exports.default = router;

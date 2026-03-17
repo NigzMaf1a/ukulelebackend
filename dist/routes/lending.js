@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const lending_1 = require("../controllers/lending");
+const router = (0, express_1.Router)();
+router.post("/add", lending_1.createLending);
+router.get("/get", lending_1.getAllLending);
+router.get("/get/byid/:lendID", lending_1.getLendingById);
+router.put("/put/:lendID", lending_1.updateLending);
+router.delete("/delete/:lendID", lending_1.deleteLending);
+exports.default = router;

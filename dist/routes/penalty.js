@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const penalty_1 = require("../controllers/penalty");
+const router = (0, express_1.Router)();
+router.post("/add", penalty_1.createPenalty);
+router.get("/get", penalty_1.getAllPenalties);
+router.get("/get/byid/:penaltyID", penalty_1.getPenaltyById);
+router.put("/put/:penaltyID", penalty_1.updatePenalty);
+router.delete("/delete/:penaltyID", penalty_1.deletePenalty);
+exports.default = router;

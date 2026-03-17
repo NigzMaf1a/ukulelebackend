@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const dispatch_1 = require("../controllers/dispatch");
+const router = (0, express_1.Router)();
+router.post("/add", dispatch_1.createDispatch);
+router.get("/get", dispatch_1.getAllDispatches);
+router.get("/get/byid/:dispatchID", dispatch_1.getDispatchById);
+router.put("/put/:dispatchID", dispatch_1.updateDispatch);
+router.delete("/delete/:dispatchID", dispatch_1.deleteDispatch);
+exports.default = router;
