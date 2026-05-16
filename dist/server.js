@@ -42,14 +42,26 @@ const app = (0, express_1.default)();
 const PORT = Number(process.env.PORT) || 5000;
 app.use((0, helmet_1.default)());
 const allowedOrigins = process.env.CLIENT_ORIGIN
-    ? [process.env.CLIENT_ORIGIN]
-    : ['http://localhost:5173', 'http://localhost:5000'];
-app.use((0, cors_1.default)({
-    origin: allowedOrigins,
+  ? [process.env.CLIENT_ORIGIN]
+  : ['http://localhost:5173', 'http://localhost:5000'];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
-}));
+  })
+);
 app.options('', (0, cors_1.default)());
 app.use((0, compression_1.default)());
 app.use(express_1.default.json());
