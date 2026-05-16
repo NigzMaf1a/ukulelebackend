@@ -61,22 +61,33 @@ const PORT = Number(process.env.PORT) || 5000;
 
 app.use(helmet.default());
 
-const allowedOrigins = new Set([
-  "http://localhost:5173",
-  "http://localhost:5000",
-  "https://ukulele-band-admin.vercel.app",
-]);
+/**
+ * 🚀 CORS (Render + Vercel SAFE VERSION)
+ * - NEVER throws errors (prevents missing headers)
+ * - Always responds to preflight
+ */
+const allowedOrigins = new Set(
+  process.env.CLIENT_ORIGIN
+    ? [process.env.CLIENT_ORIGIN]
+    : [
+        "http://localhost:5173",
+        "http://localhost:5000",
+        "https://ukulele-band-admin.vercel.app",
+      ]
+);
 
 app.use(
-  cors({
+  cors.default({
     origin: function (origin, callback) {
+      // allow server-to-server / curl
       if (!origin) return callback(null, true);
 
+      // allow valid origins
       if (allowedOrigins.has(origin)) {
         return callback(null, true);
       }
 
-      // ⚠️ DO NOT throw error (this breaks CORS response)
+      // IMPORTANT: do NOT throw errors (causes missing headers in Render)
       return callback(null, false);
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
@@ -85,7 +96,10 @@ app.use(
   })
 );
 
-// IMPORTANT: no manual app.options() needed
+/**
+ * 🧠 Extra safety for preflight (OPTIONS requests)
+ */
+app.options("*", cors.default());
 
 app.use(compression.default());
 app.use(express.default.json());
