@@ -96,11 +96,6 @@ app.use(
   })
 );
 
-/**
- * 🧠 Extra safety for preflight (OPTIONS requests)
- */
-app.options("*", cors.default());
-
 app.use(compression.default());
 app.use(express.default.json());
 app.use(express.default.urlencoded({ extended: true }));
