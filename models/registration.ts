@@ -3,7 +3,7 @@ import { RegistrationRow, RegistrationPayload } from "../interfaces/registration
 import bcrypt from "bcryptjs";
 
 export default class RegistrationModel {
-  constructor() {}
+  constructor() { }
 
   /**
    * Create a new registration record

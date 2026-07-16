@@ -9,31 +9,31 @@ export interface RegistrationRow extends RowDataPacket {
   Password: string;
   Gender: "Male" | "Female";
   RegType:
-    | "Customer"
-    | "DJ"
-    | "Mcee"
-    | "Storeman"
-    | "Accountant"
-    | "Dispatchman"
-    | "Inspector"
-    | "Band"
-    | "Admin"
-    | "Supplier";
+  | "Customer"
+  | "DJ"
+  | "Mcee"
+  | "Storeman"
+  | "Accountant"
+  | "Dispatchman"
+  | "Inspector"
+  | "Band"
+  | "Admin"
+  | "Supplier";
   dLocation:
-    | "Nairobi CBD"
-    | "Westlands"
-    | "Karen"
-    | "Langata"
-    | "Kilimani"
-    | "Eastleigh"
-    | "Umoja"
-    | "Parklands"
-    | "Ruiru"
-    | "Ruai"
-    | "Gikambura"
-    | "Kitengela"
-    | "Nairobi West"
-    | "Nairobi East";
+  | "Nairobi CBD"
+  | "Westlands"
+  | "Karen"
+  | "Langata"
+  | "Kilimani"
+  | "Eastleigh"
+  | "Umoja"
+  | "Parklands"
+  | "Ruiru"
+  | "Ruai"
+  | "Gikambura"
+  | "Kitengela"
+  | "Nairobi West"
+  | "Nairobi East";
   Photo: Buffer | null;
   accStatus: "Pending" | "Approved" | "Inactive";
   lastAccessed: Date;
@@ -46,31 +46,32 @@ export interface RegistrationPayload {
   Password: string;
   Gender: "Male" | "Female";
   RegType:
-    | "Customer"
-    | "DJ"
-    | "Mcee"
-    | "Storeman"
-    | "Accountant"
-    | "Dispatchman"
-    | "Inspector"
-    | "Band"
-    | "Admin"
-    | "Supplier";
+  | "Customer"
+  | "DJ"
+  | "Mcee"
+  | "Storeman"
+  | "Accountant"
+  | "Dispatchman"
+  | "Inspector"
+  | "Band"
+  | "Admin"
+  | "Supplier"
+  | "Service Manager"
   dLocation:
-    | "Nairobi CBD"
-    | "Westlands"
-    | "Karen"
-    | "Langata"
-    | "Kilimani"
-    | "Eastleigh"
-    | "Umoja"
-    | "Parklands"
-    | "Ruiru"
-    | "Ruai"
-    | "Gikambura"
-    | "Kitengela"
-    | "Nairobi West"
-    | "Nairobi East";
+  | "Nairobi CBD"
+  | "Westlands"
+  | "Karen"
+  | "Langata"
+  | "Kilimani"
+  | "Eastleigh"
+  | "Umoja"
+  | "Parklands"
+  | "Ruiru"
+  | "Ruai"
+  | "Gikambura"
+  | "Kitengela"
+  | "Nairobi West"
+  | "Nairobi East";
   Photo?: Buffer | null;
   accStatus?: "Pending" | "Approved" | "Inactive";
   lastAccessed?: Date;
