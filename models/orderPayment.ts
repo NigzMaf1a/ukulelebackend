@@ -2,7 +2,7 @@ import { query } from "../utils/db";
 import OrderPaymentRow, { OrderPaymentPayload } from "../interfaces/orderPayment";
 
 export default class OrderPayment {
-  constructor() {}
+  constructor() { }
 
   async createOrderPayment(data: OrderPaymentPayload): Promise<{ message: string; id: number }> {
     const sql = `
@@ -12,10 +12,10 @@ export default class OrderPayment {
       RETURNING OrderPayID
     `;
     const rows = await query<{ OrderPayID: number }>(sql, [
-      data.OrderID,
-      data.PaymentCode,
-      data.PaymentDate,
-      data.Amount,
+      data.orderid,
+      data.paymentcode,
+      data.paymentdate,
+      data.amount,
     ]);
     return { message: "Order payment created", id: rows[0].OrderPayID };
   }
@@ -40,7 +40,7 @@ export default class OrderPayment {
       SET OrderID = $1, PaymentCode = $2, PaymentDate = $3, Amount = $4
       WHERE OrderPayID = $5
     `;
-    const res = await query(sql, [data.OrderID, data.PaymentCode, data.PaymentDate, data.Amount, orderPayID]);
+    const res = await query(sql, [data.orderid, data.paymentcode, data.paymentdate, data.amount, orderPayID]);
     return { message: "Order payment updated", affectedRows: (res as any).rowCount || 0 };
   }
 

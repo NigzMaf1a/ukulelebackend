@@ -1,8 +1,8 @@
 import { query } from "../utils/db";
-import {PenaltyPaymentRow,  PenaltyPaymentPayload } from "../interfaces/penaltyPayment";
+import { PenaltyPaymentRow, PenaltyPaymentPayload } from "../interfaces/penaltyPayment";
 
 export default class PenaltyPayment {
-  constructor() {}
+  constructor() { }
 
   /**
    * Create a new penalty payment record
@@ -17,10 +17,10 @@ export default class PenaltyPayment {
       RETURNING PenaltyPaymentID
     `;
     const rows = await query<{ PenaltyPaymentID: number }>(sql, [
-      data.PenaltyID,
-      data.PaymentCode,
-      data.PaymentDate,
-      data.Amount,
+      data.penaltyid,
+      data.paymentcode,
+      data.paymentdate,
+      data.amount,
     ]);
 
     return { message: "Penalty payment created", id: rows[0].PenaltyPaymentID };
@@ -58,10 +58,10 @@ export default class PenaltyPayment {
       WHERE PenaltyPaymentID = $5
     `;
     const res = await query(sql, [
-      data.PenaltyID,
-      data.PaymentCode,
-      data.PaymentDate,
-      data.Amount,
+      data.penaltyid,
+      data.paymentcode,
+      data.paymentdate,
+      data.amount,
       penaltyPaymentID,
     ]);
 

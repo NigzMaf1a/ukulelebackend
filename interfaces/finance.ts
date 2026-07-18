@@ -2,26 +2,26 @@
 import { RowDataPacket } from "mysql2";
 
 export interface FinanceRow extends RowDataPacket {
-  CustomerID: number;
-  Name: string;
-  PhoneNo: string;
-  TransactionID: number;
-  TransactionName: string; 
-  TransactionDate: Date;
-  Amount: number;
-  TransactionStatus: 'Pending' | 'Approved' | 'Rejected';
-  TransactType: "Deposit" | "Payment";
-  ServiceID: number;
+  customerid: number;
+  name: string;
+  phoneno: string;
+  transactionid: number;
+  transactionname: string;
+  transactiondate: Date;
+  amount: number;
+  transactionstatus: 'Pending' | 'Approved' | 'Rejected';
+  transacttype: "Deposit" | "Payment";
+  serviceid: number;
 }
 
 export interface FinancePayload {
-  CustomerID: number;
-  Name: string;
-  PhoneNo: string;
-  TransactionName: string; 
-  TransactionDate: Date;
-  Amount: number;
-  TransactionStatus: 'Pending' | 'Approved' | 'Rejected';
-  TransactType: "Deposit" | "Payment";
-  ServiceID: number;
+  customerid: number;
+  name: string;
+  phoneno: string;
+  transactionname: string;
+  transactiondate: Date;
+  amount: number;
+  transactionstatus: 'Pending' | 'Approved' | 'Rejected';
+  transacttype: "Deposit" | "Payment";
+  serviceid: number;
 }

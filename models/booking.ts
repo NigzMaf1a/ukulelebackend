@@ -1,9 +1,9 @@
 import { query } from "../utils/db";
 import { BookingPayload } from "../interfaces/services";
-import { BookingRow } from "../interfaces/booking";
+import { BookingRow } from "../interfaces/services";
 
 export default class BookingModel {
-  constructor() {}
+  constructor() { }
 
   async createBooking(
     payload: BookingPayload
@@ -14,12 +14,12 @@ export default class BookingModel {
       VALUES ($1, $2, $3, $4, $5, $6)
     `;
     const res = await query(sql, [
-      payload.Genre,
-      payload.BookingDate,
-      payload.Cost,
-      payload.Hours,
-      payload.ServiceID,
-      payload.BookStatus,
+      payload.genre,
+      payload.bookingdate,
+      payload.cost,
+      payload.hours,
+      payload.serviceid,
+      payload.bookstatus,
     ]);
     return { message: "Booking record created successfully", affectedRows: (res as any).rowCount || 0 };
   }
@@ -45,12 +45,12 @@ export default class BookingModel {
       WHERE BookingID = $7
     `;
     const res = await query(sql, [
-      data.Genre,
-      data.BookingDate,
-      data.Cost,
-      data.Hours,
-      data.ServiceID,
-      data.BookStatus,
+      data.genre,
+      data.bookingdate,
+      data.cost,
+      data.hours,
+      data.serviceid,
+      data.bookstatus,
       bookingID,
     ]);
     return { message: `Booking ${bookingID} updated`, affectedRows: (res as any).rowCount || 0 };

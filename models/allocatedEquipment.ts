@@ -5,7 +5,7 @@ import {
 } from "../interfaces/allocatedEquipment";
 
 export default class AllocatedEquipmentModel {
-  constructor() {}
+  constructor() { }
 
   async createAllocatedEquipment(
     data: AllocatedEquipmentPayload
@@ -16,10 +16,10 @@ export default class AllocatedEquipmentModel {
       VALUES ($1, $2, $3, $4)
     `;
     const res = await query(sql, [
-      data.EquipmentID,
-      data.LendID,
-      data.RegID,
-      data.EquipStatus,
+      data.equipmentid,
+      data.lendid,
+      data.regid,
+      data.equipstatus,
     ]);
     return { message: "Allocated equipment created", affectedRows: (res as any).rowCount || 0 };
   }
@@ -50,10 +50,10 @@ export default class AllocatedEquipmentModel {
       WHERE AllocatedEquipmentID = $5
     `;
     const res = await query(sql, [
-      data.EquipmentID,
-      data.LendID,
-      data.RegID,
-      data.EquipStatus,
+      data.equipmentid,
+      data.lendid,
+      data.regid,
+      data.equipstatus,
       allocatedEquipmentID,
     ]);
     return { message: `Allocated equipment ${allocatedEquipmentID} updated`, affectedRows: (res as any).rowCount || 0 };

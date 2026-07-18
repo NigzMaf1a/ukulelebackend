@@ -1,16 +1,16 @@
 import { RowDataPacket } from "mysql2";
 
-export interface PenaltyPaymentRow extends RowDataPacket{
-    PenaltyPaymentID: number;
-    PenaltyID:number;
-    PaymentCode:string;
-    PaymentDate:Date;
-    Amount:number;
+export interface PenaltyPaymentRow extends RowDataPacket {
+    penaltypaymentid: number;
+    penaltyid: number;
+    paymentcode: string;
+    paymentdate: Date;
+    amount: number;
 }
 
-export interface PenaltyPaymentPayload{
-    PenaltyID:number;
-    PaymentCode:string;
-    PaymentDate:Date;
-    Amount: number;
+export interface PenaltyPaymentPayload {
+    penaltyid: number;
+    paymentcode: string;
+    paymentdate: Date;
+    amount: number;
 }

@@ -2,7 +2,7 @@ import { query } from "../utils/db";
 import { FeedbackRow, FeedbackPayload } from "../interfaces/feedback";
 
 export default class FeedbackModel {
-  constructor() {}
+  constructor() { }
 
   async createFeedback(
     data: FeedbackPayload
@@ -14,11 +14,11 @@ export default class FeedbackModel {
       RETURNING FeedbackID
     `;
     const rows = await query<{ FeedbackID: number }>(sql, [
-      data.CustomerID,
-      data.Name,
-      data.Comments ?? null,
-      data.Response ?? null,
-      data.Rating,
+      data.customerid,
+      data.name,
+      data.comments ?? null,
+      data.response ?? null,
+      data.rating,
     ]);
     return { message: "Feedback created", id: rows[0].FeedbackID };
   }
@@ -44,11 +44,11 @@ export default class FeedbackModel {
       WHERE FeedbackID = $6
     `;
     const res = await query(sql, [
-      data.CustomerID,
-      data.Name,
-      data.Comments ?? null,
-      data.Response ?? null,
-      data.Rating,
+      data.customerid,
+      data.name,
+      data.comments ?? null,
+      data.response ?? null,
+      data.rating,
       feedbackID,
     ]);
     return { message: "Feedback updated", affectedRows: (res as any).rowCount || 0 };

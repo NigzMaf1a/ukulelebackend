@@ -2,13 +2,13 @@ import { RowDataPacket } from "mysql2";
 import { QueryResultRow } from "pg";
 
 export interface RegistrationRow extends RowDataPacket {
-  RegID: number;
-  Name: string;
-  PhoneNo: string;
-  Email: string;
-  Password: string;
-  Gender: "Male" | "Female";
-  RegType:
+  regid: number;
+  name: string;
+  phoneno: string;
+  email: string;
+  password: string;
+  gender: "Male" | "Female";
+  regtype:
   | "Customer"
   | "DJ"
   | "Mcee"
@@ -19,7 +19,7 @@ export interface RegistrationRow extends RowDataPacket {
   | "Band"
   | "Admin"
   | "Supplier";
-  dLocation:
+  dlocation:
   | "Nairobi CBD"
   | "Westlands"
   | "Karen"
@@ -34,18 +34,18 @@ export interface RegistrationRow extends RowDataPacket {
   | "Kitengela"
   | "Nairobi West"
   | "Nairobi East";
-  Photo: Buffer | null;
-  accStatus: "Pending" | "Approved" | "Inactive";
-  lastAccessed: Date;
+  photo: Buffer | null;
+  accstatus: "Pending" | "Approved" | "Inactive";
+  lastaccessed: Date;
 }
 
 export interface RegistrationPayload {
-  Name: string;
-  PhoneNo: string;
-  Email: string;
-  Password: string;
-  Gender: "Male" | "Female";
-  RegType:
+  name: string;
+  phoneno: string;
+  email: string;
+  password: string;
+  gender: "Male" | "Female";
+  regtype:
   | "Customer"
   | "DJ"
   | "Mcee"
@@ -55,9 +55,8 @@ export interface RegistrationPayload {
   | "Inspector"
   | "Band"
   | "Admin"
-  | "Supplier"
-  | "Service Manager"
-  dLocation:
+  | "Supplier";
+  dlocation:
   | "Nairobi CBD"
   | "Westlands"
   | "Karen"
@@ -72,7 +71,7 @@ export interface RegistrationPayload {
   | "Kitengela"
   | "Nairobi West"
   | "Nairobi East";
-  Photo?: Buffer | null;
-  accStatus?: "Pending" | "Approved" | "Inactive";
-  lastAccessed?: Date;
+  photo: Buffer | null;
+  accstatus: "Pending" | "Approved" | "Inactive";
+  lastaccessed: Date;
 }

@@ -3,7 +3,7 @@ import OrderRow, { OrderPayload } from "../interfaces/orders";
 import { OrderItemPayload } from "../interfaces/orderItem";
 
 export default class Orders {
-  constructor() {}
+  constructor() { }
 
   /**
    * CREATE - Orders + OrderItems (transaction)
@@ -26,10 +26,10 @@ export default class Orders {
       `;
 
       const orderResult = await client.query<{ orderid: number }>(orderSql, [
-        data.SupplyID,
-        data.OrderDate,
-        data.OrderAmount,
-        data.OrderStatus
+        data.supplyid,
+        data.orderdate,
+        data.orderamount,
+        data.orderstatus
       ]);
 
       const orderID = orderResult.rows[0].orderid;
@@ -43,8 +43,8 @@ export default class Orders {
       for (const item of data.items) {
         await client.query(itemSql, [
           orderID,
-          item.SupplyType,
-          item.Quantity
+          item.supplytype,
+          item.quantity
         ]);
       }
 
@@ -102,10 +102,10 @@ export default class Orders {
     `;
 
     const res = await query(sql, [
-      data.SupplyID,
-      data.OrderDate,
-      data.OrderAmount,
-      data.OrderStatus,
+      data.supplyid,
+      data.orderdate,
+      data.orderamount,
+      data.orderstatus,
       orderID
     ]);
 

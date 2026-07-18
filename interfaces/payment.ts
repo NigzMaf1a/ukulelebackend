@@ -2,18 +2,18 @@
 import { RowDataPacket } from "mysql2";
 
 export interface PaymentRow extends RowDataPacket {
-  MemberID: number;
-  Name: string;
-  PhoneNo: string;
-  ProcessID: number;
-  Amount: number;
-  Date: Date;
+  memberid: number;
+  name: string;
+  phoneno: string;
+  processid: number;
+  amount: number;
+  date: Date;
 }
 
 export interface PaymentPayload {
-  MemberID: number;
-  Name: string;
-  PhoneNo: string;
-  Amount: number;
-  Date: Date;
+  memberid: number;
+  name: string;
+  phoneno: string;
+  amount: number;
+  date: Date;
 }

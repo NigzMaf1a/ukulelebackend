@@ -1,8 +1,8 @@
 import { query } from "../utils/db";
-import {PenaltyRow,  PenaltyPayload } from "../interfaces/penalty";
+import { PenaltyRow, PenaltyPayload } from "../interfaces/penalty";
 
 export default class Penalty {
-  constructor() {}
+  constructor() { }
 
   /**
    * Create a new penalty record
@@ -11,15 +11,15 @@ export default class Penalty {
     data: PenaltyPayload
   ): Promise<{ message: string; id: number }> {
     const sql = `
-      INSERT INTO Penalty (EquipmentID, Description, Condition, Penalty)
+      INSERT INTO Penalty (EquipmentID, Description, dCondition, Penalty)
       VALUES ($1, $2, $3, $4)
       RETURNING PenaltyID
     `;
     const rows = await query<{ PenaltyID: number }>(sql, [
-      data.EquipmentID,
-      data.Description,
-      data.Condition,
-      data.Penalty,
+      data.equipmentid,
+      data.description,
+      data.dcondition,
+      data.penalty,
     ]);
     return { message: "Penalty created", id: rows[0].PenaltyID };
   }
@@ -41,14 +41,14 @@ export default class Penalty {
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
       UPDATE Penalty
-      SET EquipmentID = $1, Description = $2, Condition = $3, Penalty = $4
+      SET EquipmentID = $1, Description = $2, dCondition = $3, Penalty = $4
       WHERE PenaltyID = $5
     `;
     const res = await query(sql, [
-      data.EquipmentID,
-      data.Description,
-      data.Condition,
-      data.Penalty,
+      data.equipmentid,
+      data.description,
+      data.dcondition,
+      data.penalty,
       penaltyID,
     ]);
     return { message: "Penalty updated", affectedRows: (res as any).rowCount || 0 };

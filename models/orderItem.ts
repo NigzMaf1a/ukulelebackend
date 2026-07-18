@@ -2,7 +2,7 @@ import { query } from "../utils/db";
 import OrderItem, { OrderItemPayload } from "../interfaces/orderItem";
 
 export default class OrderItemModel {
-  constructor() {}
+  constructor() { }
 
   async createOrderItem(data: OrderItemPayload): Promise<{ message: string; id: number }> {
     const sql = `
@@ -12,9 +12,9 @@ export default class OrderItemModel {
       RETURNING OrderItemID
     `;
     const rows = await query<{ OrderItemID: number }>(sql, [
-      data.OrderID,
-      data.SupplyType,
-      data.Quantity,
+      data.orderid,
+      data.supplytype,
+      data.quantity,
     ]);
     return { message: "Order item created", id: rows[0].OrderItemID };
   }
@@ -39,7 +39,7 @@ export default class OrderItemModel {
       SET OrderID = $1, SupplyType = $2, Quantity = $3
       WHERE OrderItemID = $4
     `;
-    const res = await query(sql, [data.OrderID, data.SupplyType, data.Quantity, orderItemID]);
+    const res = await query(sql, [data.orderid, data.supplytype, data.quantity, orderItemID]);
     return { message: "Order item updated", affectedRows: (res as any).rowCount || 0 };
   }
 

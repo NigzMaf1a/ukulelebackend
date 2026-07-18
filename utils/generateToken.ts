@@ -5,19 +5,19 @@ export interface UserRecord {
   Name: string;
   PhoneNo: string;
   Email: string;
-  Password:string;
+  Password: string;
   Gender: 'Male' | 'Female';
   RegType:
-    | "Customer"
-    | "DJ"
-    | "Mcee"
-    | "Storeman"
-    | "Accountant"
-    | "Dispatchman"
-    | "Inspector"
-    | "Band"
-    | "Admin"
-    | "Supplier";
+  | "Customer"
+  | "DJ"
+  | "Mcee"
+  | "Storeman"
+  | "Accountant"
+  | "Dispatchman"
+  | "Inspector"
+  | "Band"
+  | "Admin"
+  | "Supplier";
   dLocation?: string;
   accStatus: 'Pending' | 'Approved' | 'Inactive';
   Photo?: string;

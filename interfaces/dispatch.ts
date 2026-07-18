@@ -1,22 +1,22 @@
 import { RowDataPacket } from "mysql2";
 
 export interface DispatchRow extends RowDataPacket {
-  DispatchID: number;
-  CustomerID: number;
-  Name: string;
-  dLocation: string;
-  ServiceID: number;
-  PhoneNo: string;
-  Dispatched: 'Pending' | 'Dispatched' | 'Packed' | 'Returned';
-  DispatchDate: Date;
+  dispatchid: number;
+  customerid: number;
+  name: string;
+  dlocation: string;
+  serviceid: number;
+  phoneno: string;
+  dispatched: 'Pending' | 'Dispatched' | 'Packed' | 'Returned';
+  dispatchdate: Date;
 }
 
 export interface DispatchPayload {
-  CustomerID: number;
-  Name: string;
-  dLocation: string;
-  ServiceID: number;
-  PhoneNo: string;
-  Dispatched?: 'Pending' | 'Dispatched' | 'Packed' | 'Returned';
-  DispatchDate?: Date;
+  customerid: number;
+  name: string;
+  dlocation: string;
+  serviceid: number;
+  phoneno: string;
+  dispatched?: 'Pending' | 'Dispatched' | 'Packed' | 'Returned';
+  dispatchdate?: Date;
 }

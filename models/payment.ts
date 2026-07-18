@@ -1,8 +1,8 @@
 import { query } from "../utils/db";
-import {PaymentRow, PaymentPayload } from "../interfaces/payment";
+import { PaymentRow, PaymentPayload } from "../interfaces/payment";
 
 export default class Payment {
-  constructor() {}
+  constructor() { }
 
   /**
    * Create a new payment record
@@ -16,11 +16,11 @@ export default class Payment {
       RETURNING ProcessID
     `;
     const rows = await query<{ ProcessID: number }>(sql, [
-      data.MemberID,
-      data.Name,
-      data.PhoneNo,
-      data.Amount,
-      data.Date,
+      data.memberid,
+      data.name,
+      data.phoneno,
+      data.amount,
+      data.date,
     ]);
     return { message: "Payment record created", id: rows[0].ProcessID };
   }
@@ -46,11 +46,11 @@ export default class Payment {
       WHERE ProcessID = $6
     `;
     const res = await query(sql, [
-      data.MemberID,
-      data.Name,
-      data.PhoneNo,
-      data.Amount,
-      data.Date,
+      data.memberid,
+      data.name,
+      data.phoneno,
+      data.amount,
+      data.date,
       processID,
     ]);
     return { message: "Payment record updated", affectedRows: (res as any).rowCount || 0 };

@@ -2,7 +2,7 @@ import { query } from "../utils/db";
 import { ServicesRow } from "../interfaces/services";
 
 export default class ServiceManager {
-  constructor() {}
+  constructor() { }
 
   /**
    * Fetch all services that are Paid but still Pending

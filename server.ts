@@ -1,6 +1,6 @@
 import path from 'path';
 import dotenv from 'dotenv';
-dotenv.config({ path: path.resolve(process.cwd(), '.env') }); 
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 import express, { Request, Response } from 'express';
 import cors from 'cors';
@@ -44,20 +44,44 @@ const PORT: number = Number(process.env.PORT) || 5000;
 
 app.use(helmet());
 
+app.use(helmet());
+
 const allowedOrigins = process.env.CLIENT_ORIGIN
-  ? [process.env.CLIENT_ORIGIN]
-  : ['http://localhost:5173','http://localhost:5000'];
+  ? process.env.CLIENT_ORIGIN.split(",").map(origin => origin.trim())
+  : [
+    "http://localhost:5173",
+    "http://localhost:5000",
+    "http://localhost:3000"
+  ];
 
 app.use(
   cors({
-    origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: (origin, callback) => {
+      // Allow requests with no Origin (mobile apps, Postman, curl)
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Origin",
+      "Accept",
+      "X-Requested-With"
+    ],
   })
 );
 
-app.options('',cors());
+// Enable preflight requests for all routes
+app.options("", cors());
 
 
 app.use(compression());

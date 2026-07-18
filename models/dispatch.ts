@@ -2,7 +2,7 @@ import { query } from "../utils/db";
 import { DispatchRow, DispatchPayload } from "../interfaces/dispatch";
 
 export default class DispatchModel {
-  constructor() {}
+  constructor() { }
 
   async createDispatch(
     payload: DispatchPayload
@@ -14,13 +14,13 @@ export default class DispatchModel {
       RETURNING DispatchID
     `;
     const rows = await query<{ DispatchID: number }>(sql, [
-      payload.CustomerID,
-      payload.Name,
-      payload.dLocation,
-      payload.ServiceID,
-      payload.PhoneNo,
-      payload.Dispatched ?? "Pending",
-      payload.DispatchDate ?? new Date(),
+      payload.customerid,
+      payload.name,
+      payload.dlocation,
+      payload.serviceid,
+      payload.phoneno,
+      payload.dispatched ?? "Pending",
+      payload.dispatchdate ?? new Date(),
     ]);
     return { message: "Dispatch created successfully", dispatchID: rows[0].DispatchID };
   }
@@ -47,13 +47,13 @@ export default class DispatchModel {
       WHERE DispatchID = $8
     `;
     const res = await query(sql, [
-      data.CustomerID,
-      data.Name,
-      data.dLocation,
-      data.ServiceID,
-      data.PhoneNo,
-      data.Dispatched,
-      data.DispatchDate,
+      data.customerid,
+      data.name,
+      data.dlocation,
+      data.serviceid,
+      data.phoneno,
+      data.dispatched,
+      data.dispatchdate,
       dispatchID,
     ]);
     return { message: "Dispatch updated", affectedRows: (res as any).rowCount || 0 };

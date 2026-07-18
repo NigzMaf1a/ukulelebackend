@@ -2,22 +2,23 @@ import { query } from "../utils/db";
 import { InspectorRow, InspectorPayload } from "../interfaces/inspector";
 
 export default class InspectorModel {
-  constructor() {}
+  constructor() { }
 
   async createInspector(
     data: InspectorPayload
   ): Promise<{ message: string; id: number }> {
     const sql = `
       INSERT INTO Inspector
-        (EquipmentID, InspectionDate, InspectorName, Condition)
+        (EquipmentID, ServiceID, InspectionDate, InspectorName, dCondition)
       VALUES ($1, $2, $3, $4)
       RETURNING InspectionID
     `;
     const rows = await query<{ InspectionID: number }>(sql, [
-      data.EquipmentID,
-      data.InspectionDate,
-      data.InspectorName,
-      data.Condition,
+      data.equipmentid,
+      data.serviceid,
+      data.inspectiondate,
+      data.inspectorname,
+      data.dcondition,
     ]);
     return { message: "Inspection created", id: rows[0].InspectionID };
   }
@@ -33,14 +34,15 @@ export default class InspectorModel {
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
       UPDATE Inspector
-      SET EquipmentID = $1, InspectionDate = $2, InspectorName = $3, Condition = $4
-      WHERE InspectionID = $5
+      SET EquipmentID = $1, SET ServiceID = $2 InspectionDate = $3, InspectorName = $4, dCondition = $5
+      WHERE InspectionID = $6
     `;
     const res = await query(sql, [
-      data.EquipmentID,
-      data.InspectionDate,
-      data.InspectorName,
-      data.Condition,
+      data.equipmentid,
+      data.serviceid,
+      data.inspectiondate,
+      data.inspectorname,
+      data.dcondition,
       inspectionID,
     ]);
     return { message: "Inspection updated", affectedRows: (res as any).rowCount || 0 };

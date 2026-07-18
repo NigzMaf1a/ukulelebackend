@@ -1,13 +1,13 @@
 // Admin.ts
 import { query } from "../utils/db";
-import { 
-  RegistrationRow, RegistrationPayload 
+import {
+  RegistrationRow, RegistrationPayload
 } from "../interfaces/registration";
 import { FeedbackRow, FeedbackPayload } from "../interfaces/feedback";
 import { AboutRow, AboutPayload } from "../interfaces/about";
 import { ContactRow, ContactPayload } from "../interfaces/contact";
 import { BookingRow } from "../interfaces/band";
-import LendingRow from "../interfaces/services";
+import { LendingRow } from "../interfaces/services";
 import { PenaltyRow } from "../interfaces/penalty";
 import { InspectorRow } from "../interfaces/inspector";
 import { InventoryRow } from "../interfaces/inventory";
@@ -15,7 +15,7 @@ import { FinanceRow } from "../interfaces/finance";
 import { SupplyRow } from "../interfaces/supply";
 
 export default class Admin {
-  constructor() {}
+  constructor() { }
 
   // --- User management ---
   async fetchPendingUsers(): Promise<RegistrationRow[]> {
@@ -112,11 +112,11 @@ export default class Admin {
           POBox = $5
     `;
     const res = await query(sql, [
-      payload.PhoneNo,
-      payload.EmailAddress,
-      payload.Instagram,
-      payload.Facebook,
-      payload.PoBox,
+      payload.phoneno,
+      payload.emailaddress,
+      payload.instagram,
+      payload.facebook,
+      payload.pobox,
     ]);
     return (res as any).rowCount > 0;
   }

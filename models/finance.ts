@@ -2,7 +2,7 @@ import { query } from "../utils/db";
 import { FinanceRow, FinancePayload } from "../interfaces/finance";
 
 export default class FinanceModel {
-  constructor() {}
+  constructor() { }
 
   async createFinance(
     data: FinancePayload
@@ -14,13 +14,13 @@ export default class FinanceModel {
       RETURNING TransactionID
     `;
     const rows = await query<{ TransactionID: number }>(sql, [
-      data.CustomerID,
-      data.Name,
-      data.PhoneNo,
-      data.TransactionDate,
-      data.Amount,
-      data.TransactType,
-      data.ServiceID,
+      data.customerid,
+      data.name,
+      data.phoneno,
+      data.transactiondate,
+      data.amount,
+      data.transacttype,
+      data.serviceid,
     ]);
     return { message: "Finance record created", id: rows[0].TransactionID };
   }
@@ -46,13 +46,13 @@ export default class FinanceModel {
       WHERE TransactionID = $8
     `;
     const res = await query(sql, [
-      data.CustomerID,
-      data.Name,
-      data.PhoneNo,
-      data.TransactionDate,
-      data.Amount,
-      data.TransactType,
-      data.ServiceID,
+      data.customerid,
+      data.name,
+      data.phoneno,
+      data.transactiondate,
+      data.amount,
+      data.transacttype,
+      data.serviceid,
       transactionID,
     ]);
     return { message: "Finance record updated", affectedRows: (res as any).rowCount || 0 };

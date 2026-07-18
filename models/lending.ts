@@ -1,8 +1,9 @@
 import { query } from "../utils/db";
-import LendingRow, {LendingPayload } from "../interfaces/services";
+import { LendingPayload } from "../interfaces/services";
+import { LendingRow } from "../interfaces/services";
 
 export default class LendingModel {
-  constructor() {}
+  constructor() { }
 
   async createLending(
     payload: LendingPayload
@@ -14,11 +15,11 @@ export default class LendingModel {
       RETURNING LendID
     `;
     const rows = await query<{ LendID: number }>(sql, [
-      payload.LendingDate,
-      payload.Cost,
-      payload.Hours,
-      payload.ServiceID,
-      payload.LendingStatus,
+      payload.lendingdate,
+      payload.cost,
+      payload.hours,
+      payload.serviceid,
+      payload.lendingstatus,
     ]);
     return { message: "Lending record created", lendID: rows[0].LendID };
   }
@@ -44,11 +45,11 @@ export default class LendingModel {
       WHERE LendID = $6
     `;
     const res = await query(sql, [
-      data.LendingDate,
-      data.Cost,
-      data.Hours,
-      data.ServiceID,
-      data.LendingStatus,
+      data.lendingdate,
+      data.cost,
+      data.hours,
+      data.serviceid,
+      data.lendingstatus,
       lendID,
     ]);
     return { message: "Lending record updated", affectedRows: (res as any).rowCount || 0 };

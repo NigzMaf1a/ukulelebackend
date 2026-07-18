@@ -2,7 +2,7 @@ import { query } from "../utils/db";
 import { SupplyRow, SupplyPayload } from "../interfaces/supply";
 
 export default class SupplyModel {
-  constructor() {}
+  constructor() { }
 
   /**
    * Create a new supply record
@@ -15,11 +15,11 @@ export default class SupplyModel {
       RETURNING SupplyID
     `;
     const rows = await query<{ SupplyID: number }>(sql, [
-      data.Price,
-      data.SupplierName,
-      data.SupplyDate,
-      data.PhoneNo,
-      data.SupplyStatus,
+      data.price,
+      data.suppliername,
+      data.supplydate,
+      data.phoneno,
+      data.supplystatus,
     ]);
     return { message: "Supply record created", id: rows[0].SupplyID };
   }
@@ -54,11 +54,11 @@ export default class SupplyModel {
       WHERE SupplyID = $6
     `;
     const res = await query(sql, [
-      data.Price,
-      data.SupplierName,
-      data.SupplyDate,
-      data.PhoneNo,
-      data.SupplyStatus,
+      data.price,
+      data.suppliername,
+      data.supplydate,
+      data.phoneno,
+      data.supplystatus,
       supplyID,
     ]);
     return { message: "Supply record updated", affectedRows: (res as any).rowCount || 0 };

@@ -1,16 +1,18 @@
 import { RowDataPacket } from "mysql2";
 
 export interface InspectorRow extends RowDataPacket {
-  EquipmentID: number;
-  InspectionID: number;
-  InspectionDate: Date;
-  InspectorName: string;
-  Condition: "CAT1" | "CAT2" | "CAT3" | "CAT4";
+  equipmentid: number;
+  inspectionid: number;
+  serviceid: number;
+  inspectiondate: Date;
+  inspectorname: string;
+  dcondition: "CAT1" | "CAT2" | "CAT3" | "CAT4";
 }
 
 export interface InspectorPayload {
-  EquipmentID: number;
-  InspectionDate: Date;
-  InspectorName: string;
-  Condition: "CAT1" | "CAT2" | "CAT3" | "CAT4";
+  equipmentid: number;
+  serviceid: number;
+  inspectiondate: Date;
+  inspectorname: string;
+  dcondition: "CAT1" | "CAT2" | "CAT3" | "CAT4";
 }

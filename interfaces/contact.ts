@@ -1,18 +1,18 @@
 import { RowDataPacket } from "mysql2";
 
-export interface ContactPayload{
-    PhoneNo:string;
-    EmailAddress:string;
-    Instagram:string;
-    Facebook:string;
-    PoBox:string;
+export interface ContactPayload {
+    phoneno: string;
+    emailaddress: string;
+    instagram: string;
+    facebook: string;
+    pobox: string;
 }
 
-export interface ContactRow extends RowDataPacket{
-    ContactID:number;
-    PhoneNo:string;
-    EmailAddress:string;
-    Instagram:string;
-    Facebook:string;
-    PoBox:string;
+export interface ContactRow extends RowDataPacket {
+    contactid: number;
+    phoneno: string;
+    emailaddress: string;
+    instagram: string;
+    facebook: string;
+    pobox: string;
 }

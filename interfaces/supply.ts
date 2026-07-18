@@ -1,24 +1,24 @@
 import { RowDataPacket } from "mysql2";
 
 export interface SupplyRow extends RowDataPacket {
-  SupplyID: number;
-  Price: number;
-  SupplierName: string;
-  SupplyDate: Date;
-  PhoneNo: string;
-  SupplyType: 'Speaker' | 'Microphone' | 'Mixer' | 'CDJ' | 'Cable' | 'Wireless';
-  Available: 'Yes' | 'No';
-  AvailableUnits: number;
-  SupplyStatus: "Delivered" | "Undelivered";
+  supplyid: number;
+  price: number;
+  suppliername: string;
+  supplydate: Date;
+  phoneno: string;
+  supplytype: 'Speaker' | 'Microphone' | 'Mixer' | 'CDJ' | 'Cable' | 'Wireless';
+  available: 'Yes' | 'No';
+  availableunits: number;
+  supplystatus: "Delivered" | "Undelivered";
 }
 
 export interface SupplyPayload {
-  Price: number;
-  SupplierName: string;
-  SupplyDate: Date;
-  PhoneNo: string;
-  SupplyType: 'Speaker' | 'Microphone' | 'Mixer' | 'CDJ' | 'Cable' | 'Wireless';
-  Available: 'Yes' | 'No';
-  AvailableUnits: number;
-  SupplyStatus: "Delivered" | "Undelivered";
+  price: number;
+  suppliername: string;
+  supplydate: Date;
+  phoneno: string;
+  supplytype: 'Speaker' | 'Microphone' | 'Mixer' | 'CDJ' | 'Cable' | 'Wireless';
+  available: 'Yes' | 'No';
+  availableunits: number;
+  supplystatus: "Delivered" | "Undelivered";
 }

@@ -1,9 +1,9 @@
 import { RowDataPacket } from "mysql2";
 
 export interface AboutRow extends RowDataPacket {
-  Detail: string;
+  detail: string;
 }
 
 export interface AboutPayload {
-  Detail: string;
+  detail: string;
 }
