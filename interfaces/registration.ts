@@ -18,6 +18,7 @@ export interface RegistrationRow extends RowDataPacket {
   | "Inspector"
   | "Band"
   | "Admin"
+  | "Service Manager"
   | "Supplier";
   dlocation:
   | "Nairobi CBD"
