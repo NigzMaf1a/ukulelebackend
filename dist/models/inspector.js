@@ -6,15 +6,16 @@ class InspectorModel {
     async createInspector(data) {
         const sql = `
       INSERT INTO Inspector
-        (EquipmentID, InspectionDate, InspectorName, Condition)
+        (EquipmentID, ServiceID, InspectionDate, InspectorName, dCondition)
       VALUES ($1, $2, $3, $4)
       RETURNING InspectionID
     `;
         const rows = await (0, db_1.query)(sql, [
-            data.EquipmentID,
-            data.InspectionDate,
-            data.InspectorName,
-            data.Condition,
+            data.equipmentid,
+            data.serviceid,
+            data.inspectiondate,
+            data.inspectorname,
+            data.dcondition,
         ]);
         return { message: "Inspection created", id: rows[0].InspectionID };
     }
@@ -25,14 +26,15 @@ class InspectorModel {
     async updateInspector(inspectionID, data) {
         const sql = `
       UPDATE Inspector
-      SET EquipmentID = $1, InspectionDate = $2, InspectorName = $3, Condition = $4
-      WHERE InspectionID = $5
+      SET EquipmentID = $1, SET ServiceID = $2 InspectionDate = $3, InspectorName = $4, dCondition = $5
+      WHERE InspectionID = $6
     `;
         const res = await (0, db_1.query)(sql, [
-            data.EquipmentID,
-            data.InspectionDate,
-            data.InspectorName,
-            data.Condition,
+            data.equipmentid,
+            data.serviceid,
+            data.inspectiondate,
+            data.inspectorname,
+            data.dcondition,
             inspectionID,
         ]);
         return { message: "Inspection updated", affectedRows: res.rowCount || 0 };

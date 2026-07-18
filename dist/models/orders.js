@@ -17,10 +17,10 @@ class Orders {
         RETURNING OrderID
       `;
             const orderResult = await client.query(orderSql, [
-                data.SupplyID,
-                data.OrderDate,
-                data.OrderAmount,
-                data.OrderStatus
+                data.supplyid,
+                data.orderdate,
+                data.orderamount,
+                data.orderstatus
             ]);
             const orderID = orderResult.rows[0].orderid;
             const itemSql = `
@@ -31,8 +31,8 @@ class Orders {
             for (const item of data.items) {
                 await client.query(itemSql, [
                     orderID,
-                    item.SupplyType,
-                    item.Quantity
+                    item.supplytype,
+                    item.quantity
                 ]);
             }
             await client.query("COMMIT");
@@ -77,10 +77,10 @@ class Orders {
       WHERE OrderID = $5
     `;
         const res = await (0, db_1.query)(sql, [
-            data.SupplyID,
-            data.OrderDate,
-            data.OrderAmount,
-            data.OrderStatus,
+            data.supplyid,
+            data.orderdate,
+            data.orderamount,
+            data.orderstatus,
             orderID
         ]);
         return {

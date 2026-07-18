@@ -15,60 +15,61 @@ class ServicesModel {
       RETURNING ServiceID
     `;
         const serviceRows = await (0, db_1.query)(serviceSql, [
-            payload.CustomerID,
-            payload.Genre,
-            payload.Cost,
-            payload.Hours,
-            payload.ServiceType,
+            payload.customerid,
+            payload.genre,
+            payload.cost,
+            payload.hours,
+            payload.servicetype,
             "Pending",
             "Not Paid",
         ]);
         const serviceID = serviceRows[0].ServiceID;
         // Auto-insert into Lending or Booking
-        if (payload.ServiceType === "Lending") {
+        if (payload.servicetype === "Lending") {
             const lendingSql = `
         INSERT INTO Lending
           (Genre, LendingDate, Cost, Hours, ServiceID, LendingStatus, Performed)
         VALUES ($1, NOW(), $2, $3, $4, $5, $6)
       `;
             const lendingData = {
-                Genre: payload.Genre,
-                LendingDate: new Date(),
-                Cost: payload.Cost,
-                Hours: payload.Hours,
-                ServiceID: serviceID,
-                LendingStatus: "Yet",
-                Performed: "No",
+                genre: payload.genre,
+                lendingdate: new Date(),
+                cost: payload.cost,
+                hours: payload.hours,
+                serviceid: serviceID,
+                lendingstatus: "Yet",
+                performed: "No",
             };
             await (0, db_1.query)(lendingSql, [
-                lendingData.Genre,
-                lendingData.Cost,
-                lendingData.Hours,
-                lendingData.ServiceID,
-                lendingData.LendingStatus,
-                lendingData.Performed,
+                lendingData.genre,
+                lendingData.cost,
+                lendingData.hours,
+                lendingData.serviceid,
+                lendingData.lendingstatus,
+                lendingData.performed,
             ]);
         }
-        else if (payload.ServiceType === "Booking") {
+        else if (payload.servicetype === "Booking") {
             const bookingSql = `
         INSERT INTO Booking
           (Genre, BookingDate, Cost, Hours, ServiceID, BookStatus, Performed)
         VALUES ($1, NOW(), $2, $3, $4, $5, $6)
       `;
             const bookingData = {
-                Genre: payload.Genre,
-                BookingDate: new Date(),
-                Cost: payload.Cost,
-                Hours: payload.Hours,
-                ServiceID: serviceID,
-                BookStatus: "Untick",
+                genre: payload.genre,
+                bookingdate: new Date(),
+                cost: payload.cost,
+                hours: payload.hours,
+                serviceid: serviceID,
+                bookstatus: "Untick",
+                performed: "No"
             };
             await (0, db_1.query)(bookingSql, [
-                bookingData.Genre,
-                bookingData.Cost,
-                bookingData.Hours,
-                bookingData.ServiceID,
-                bookingData.BookStatus,
+                bookingData.genre,
+                bookingData.cost,
+                bookingData.hours,
+                bookingData.serviceid,
+                bookingData.bookstatus,
                 "No",
             ]);
         }

@@ -11,13 +11,13 @@ class DispatchModel {
       RETURNING DispatchID
     `;
         const rows = await (0, db_1.query)(sql, [
-            payload.CustomerID,
-            payload.Name,
-            payload.dLocation,
-            payload.ServiceID,
-            payload.PhoneNo,
-            payload.Dispatched ?? "Pending",
-            payload.DispatchDate ?? new Date(),
+            payload.customerid,
+            payload.name,
+            payload.dlocation,
+            payload.serviceid,
+            payload.phoneno,
+            payload.dispatched ?? "Pending",
+            payload.dispatchdate ?? new Date(),
         ]);
         return { message: "Dispatch created successfully", dispatchID: rows[0].DispatchID };
     }
@@ -38,13 +38,13 @@ class DispatchModel {
       WHERE DispatchID = $8
     `;
         const res = await (0, db_1.query)(sql, [
-            data.CustomerID,
-            data.Name,
-            data.dLocation,
-            data.ServiceID,
-            data.PhoneNo,
-            data.Dispatched,
-            data.DispatchDate,
+            data.customerid,
+            data.name,
+            data.dlocation,
+            data.serviceid,
+            data.phoneno,
+            data.dispatched,
+            data.dispatchdate,
             dispatchID,
         ]);
         return { message: "Dispatch updated", affectedRows: res.rowCount || 0 };

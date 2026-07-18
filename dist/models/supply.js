@@ -14,11 +14,11 @@ class SupplyModel {
       RETURNING SupplyID
     `;
         const rows = await (0, db_1.query)(sql, [
-            data.Price,
-            data.SupplierName,
-            data.SupplyDate,
-            data.PhoneNo,
-            data.SupplyStatus,
+            data.price,
+            data.suppliername,
+            data.supplydate,
+            data.phoneno,
+            data.supplystatus,
         ]);
         return { message: "Supply record created", id: rows[0].SupplyID };
     }
@@ -47,11 +47,11 @@ class SupplyModel {
       WHERE SupplyID = $6
     `;
         const res = await (0, db_1.query)(sql, [
-            data.Price,
-            data.SupplierName,
-            data.SupplyDate,
-            data.PhoneNo,
-            data.SupplyStatus,
+            data.price,
+            data.suppliername,
+            data.supplydate,
+            data.phoneno,
+            data.supplystatus,
             supplyID,
         ]);
         return { message: "Supply record updated", affectedRows: res.rowCount || 0 };

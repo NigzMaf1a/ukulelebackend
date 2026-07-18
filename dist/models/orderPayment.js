@@ -11,10 +11,10 @@ class OrderPayment {
       RETURNING OrderPayID
     `;
         const rows = await (0, db_1.query)(sql, [
-            data.OrderID,
-            data.PaymentCode,
-            data.PaymentDate,
-            data.Amount,
+            data.orderid,
+            data.paymentcode,
+            data.paymentdate,
+            data.amount,
         ]);
         return { message: "Order payment created", id: rows[0].OrderPayID };
     }
@@ -36,7 +36,7 @@ class OrderPayment {
       SET OrderID = $1, PaymentCode = $2, PaymentDate = $3, Amount = $4
       WHERE OrderPayID = $5
     `;
-        const res = await (0, db_1.query)(sql, [data.OrderID, data.PaymentCode, data.PaymentDate, data.Amount, orderPayID]);
+        const res = await (0, db_1.query)(sql, [data.orderid, data.paymentcode, data.paymentdate, data.amount, orderPayID]);
         return { message: "Order payment updated", affectedRows: res.rowCount || 0 };
     }
     async deleteOrderPayment(orderPayID) {

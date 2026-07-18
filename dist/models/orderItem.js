@@ -11,9 +11,9 @@ class OrderItemModel {
       RETURNING OrderItemID
     `;
         const rows = await (0, db_1.query)(sql, [
-            data.OrderID,
-            data.SupplyType,
-            data.Quantity,
+            data.orderid,
+            data.supplytype,
+            data.quantity,
         ]);
         return { message: "Order item created", id: rows[0].OrderItemID };
     }
@@ -35,7 +35,7 @@ class OrderItemModel {
       SET OrderID = $1, SupplyType = $2, Quantity = $3
       WHERE OrderItemID = $4
     `;
-        const res = await (0, db_1.query)(sql, [data.OrderID, data.SupplyType, data.Quantity, orderItemID]);
+        const res = await (0, db_1.query)(sql, [data.orderid, data.supplytype, data.quantity, orderItemID]);
         return { message: "Order item updated", affectedRows: res.rowCount || 0 };
     }
     async deleteOrderItem(orderItemID) {

@@ -16,7 +16,7 @@ class RegistrationModel {
         try {
             await client.query("BEGIN");
             // hash password
-            const hashedPassword = await bcryptjs_1.default.hash(data.Password, 10);
+            const hashedPassword = await bcryptjs_1.default.hash(data.password, 10);
             const sql = `
         INSERT INTO Registration
           (Name, PhoneNo, Email, Password, Gender, RegType, dLocation, Photo, accStatus, lastAccessed)
@@ -24,22 +24,22 @@ class RegistrationModel {
         RETURNING RegID
       `;
             const result = await client.query(sql, [
-                data.Name,
-                data.PhoneNo,
-                data.Email,
+                data.name,
+                data.phoneno,
+                data.email,
                 hashedPassword,
-                data.Gender,
-                data.RegType,
-                data.dLocation,
-                data.Photo ?? null,
-                data.accStatus ?? "Pending",
-                data.lastAccessed ?? new Date(),
+                data.gender,
+                data.regtype,
+                data.dlocation,
+                data.photo ?? null,
+                data.accstatus ?? "Pending",
+                data.lastaccessed ?? new Date(),
             ]);
             const regID = result.rows[0].RegID;
             /**
              * Insert into child tables
              */
-            if (data.RegType === "Customer") {
+            if (data.regtype === "Customer") {
                 const customerSql = `
           INSERT INTO Customer
             (RegID, Name, Email, PhoneNo)
@@ -47,9 +47,9 @@ class RegistrationModel {
         `;
                 await client.query(customerSql, [
                     regID,
-                    data.Name,
-                    data.Email,
-                    data.PhoneNo
+                    data.name,
+                    data.email,
+                    data.phoneno
                 ]);
             }
             else {
@@ -60,9 +60,9 @@ class RegistrationModel {
         `;
                 await client.query(memberSql, [
                     regID,
-                    data.RegType,
-                    data.Name,
-                    data.PhoneNo,
+                    data.regtype,
+                    data.name,
+                    data.phoneno,
                     "Not Paid"
                 ]);
             }
@@ -107,16 +107,16 @@ class RegistrationModel {
       WHERE RegID = $11
     `;
         const res = await (0, db_1.query)(sql, [
-            data.Name,
-            data.PhoneNo,
-            data.Email,
-            data.Password,
-            data.Gender,
-            data.RegType,
-            data.dLocation,
-            data.Photo ?? null,
-            data.accStatus ?? "Pending",
-            data.lastAccessed ?? new Date(),
+            data.name,
+            data.phoneno,
+            data.email,
+            data.password,
+            data.gender,
+            data.regtype,
+            data.dlocation,
+            data.photo ?? null,
+            data.accstatus ?? "Pending",
+            data.lastaccessed ?? new Date(),
             regID,
         ]);
         return {

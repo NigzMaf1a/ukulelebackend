@@ -11,11 +11,11 @@ class Contacts {
         SET PhoneNo = $1, Instagram = $2, Facebook = $3, EmailAddress = $4, POBox = $5
       `;
             const res = await (0, db_1.query)(sql, [
-                data.PhoneNo,
-                data.Instagram,
-                data.Facebook,
-                data.EmailAddress,
-                data.PoBox
+                data.phoneno,
+                data.instagram,
+                data.facebook,
+                data.emailaddress,
+                data.pobox
             ]);
             return { message: 'Contact updated successfully', affectedRows: res.rowCount || 0 };
         }
@@ -26,11 +26,11 @@ class Contacts {
         VALUES ($1, $2, $3, $4, $5)
       `;
             const res = await (0, db_1.query)(sql, [
-                data.PhoneNo,
-                data.Instagram,
-                data.Facebook,
-                data.EmailAddress,
-                data.PoBox
+                data.phoneno,
+                data.instagram,
+                data.facebook,
+                data.emailaddress,
+                data.pobox
             ]);
             return { message: 'Contact created successfully', affectedRows: res.rowCount || 0 };
         }

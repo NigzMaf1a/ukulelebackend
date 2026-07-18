@@ -8,15 +8,15 @@ class Penalty {
      */
     async createPenalty(data) {
         const sql = `
-      INSERT INTO Penalty (EquipmentID, Description, Condition, Penalty)
+      INSERT INTO Penalty (EquipmentID, Description, dCondition, Penalty)
       VALUES ($1, $2, $3, $4)
       RETURNING PenaltyID
     `;
         const rows = await (0, db_1.query)(sql, [
-            data.EquipmentID,
-            data.Description,
-            data.Condition,
-            data.Penalty,
+            data.equipmentid,
+            data.description,
+            data.dcondition,
+            data.penalty,
         ]);
         return { message: "Penalty created", id: rows[0].PenaltyID };
     }
@@ -33,14 +33,14 @@ class Penalty {
     async updatePenalty(penaltyID, data) {
         const sql = `
       UPDATE Penalty
-      SET EquipmentID = $1, Description = $2, Condition = $3, Penalty = $4
+      SET EquipmentID = $1, Description = $2, dCondition = $3, Penalty = $4
       WHERE PenaltyID = $5
     `;
         const res = await (0, db_1.query)(sql, [
-            data.EquipmentID,
-            data.Description,
-            data.Condition,
-            data.Penalty,
+            data.equipmentid,
+            data.description,
+            data.dcondition,
+            data.penalty,
             penaltyID,
         ]);
         return { message: "Penalty updated", affectedRows: res.rowCount || 0 };

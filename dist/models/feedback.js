@@ -11,11 +11,11 @@ class FeedbackModel {
       RETURNING FeedbackID
     `;
         const rows = await (0, db_1.query)(sql, [
-            data.CustomerID,
-            data.Name,
-            data.Comments ?? null,
-            data.Response ?? null,
-            data.Rating,
+            data.customerid,
+            data.name,
+            data.comments ?? null,
+            data.response ?? null,
+            data.rating,
         ]);
         return { message: "Feedback created", id: rows[0].FeedbackID };
     }
@@ -35,11 +35,11 @@ class FeedbackModel {
       WHERE FeedbackID = $6
     `;
         const res = await (0, db_1.query)(sql, [
-            data.CustomerID,
-            data.Name,
-            data.Comments ?? null,
-            data.Response ?? null,
-            data.Rating,
+            data.customerid,
+            data.name,
+            data.comments ?? null,
+            data.response ?? null,
+            data.rating,
             feedbackID,
         ]);
         return { message: "Feedback updated", affectedRows: res.rowCount || 0 };

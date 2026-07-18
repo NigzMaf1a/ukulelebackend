@@ -81,11 +81,11 @@ class Admin {
           POBox = $5
     `;
         const res = await (0, db_1.query)(sql, [
-            payload.PhoneNo,
-            payload.EmailAddress,
-            payload.Instagram,
-            payload.Facebook,
-            payload.PoBox,
+            payload.phoneno,
+            payload.emailaddress,
+            payload.instagram,
+            payload.facebook,
+            payload.pobox,
         ]);
         return res.rowCount > 0;
     }

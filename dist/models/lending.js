@@ -11,11 +11,11 @@ class LendingModel {
       RETURNING LendID
     `;
         const rows = await (0, db_1.query)(sql, [
-            payload.LendingDate,
-            payload.Cost,
-            payload.Hours,
-            payload.ServiceID,
-            payload.LendingStatus,
+            payload.lendingdate,
+            payload.cost,
+            payload.hours,
+            payload.serviceid,
+            payload.lendingstatus,
         ]);
         return { message: "Lending record created", lendID: rows[0].LendID };
     }
@@ -35,11 +35,11 @@ class LendingModel {
       WHERE LendID = $6
     `;
         const res = await (0, db_1.query)(sql, [
-            data.LendingDate,
-            data.Cost,
-            data.Hours,
-            data.ServiceID,
-            data.LendingStatus,
+            data.lendingdate,
+            data.cost,
+            data.hours,
+            data.serviceid,
+            data.lendingstatus,
             lendID,
         ]);
         return { message: "Lending record updated", affectedRows: res.rowCount || 0 };

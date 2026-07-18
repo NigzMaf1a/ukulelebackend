@@ -11,13 +11,13 @@ class FinanceModel {
       RETURNING TransactionID
     `;
         const rows = await (0, db_1.query)(sql, [
-            data.CustomerID,
-            data.Name,
-            data.PhoneNo,
-            data.TransactionDate,
-            data.Amount,
-            data.TransactType,
-            data.ServiceID,
+            data.customerid,
+            data.name,
+            data.phoneno,
+            data.transactiondate,
+            data.amount,
+            data.transacttype,
+            data.serviceid,
         ]);
         return { message: "Finance record created", id: rows[0].TransactionID };
     }
@@ -37,13 +37,13 @@ class FinanceModel {
       WHERE TransactionID = $8
     `;
         const res = await (0, db_1.query)(sql, [
-            data.CustomerID,
-            data.Name,
-            data.PhoneNo,
-            data.TransactionDate,
-            data.Amount,
-            data.TransactType,
-            data.ServiceID,
+            data.customerid,
+            data.name,
+            data.phoneno,
+            data.transactiondate,
+            data.amount,
+            data.transacttype,
+            data.serviceid,
             transactionID,
         ]);
         return { message: "Finance record updated", affectedRows: res.rowCount || 0 };

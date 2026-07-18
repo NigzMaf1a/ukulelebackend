@@ -6,7 +6,7 @@ class AboutModel {
     constructor() { }
     async createAbout(payload) {
         const sql = `INSERT INTO About (Detail) VALUES ($1)`;
-        const res = await (0, db_1.query)(sql, [payload.Detail]);
+        const res = await (0, db_1.query)(sql, [payload.detail]);
         return { message: "About created", affectedRows: res.rowCount || 0 };
     }
     async getAllAbout() {
@@ -20,7 +20,7 @@ class AboutModel {
     }
     async updateAbout(payload) {
         const sql = `UPDATE About SET Detail = $1`;
-        const res = await (0, db_1.query)(sql, [payload.Detail]);
+        const res = await (0, db_1.query)(sql, [payload.detail]);
         return { message: "About updated", affectedRows: res.rowCount || 0 };
     }
     async deleteAbout() {

@@ -13,11 +13,11 @@ class Payment {
       RETURNING ProcessID
     `;
         const rows = await (0, db_1.query)(sql, [
-            data.MemberID,
-            data.Name,
-            data.PhoneNo,
-            data.Amount,
-            data.Date,
+            data.memberid,
+            data.name,
+            data.phoneno,
+            data.amount,
+            data.date,
         ]);
         return { message: "Payment record created", id: rows[0].ProcessID };
     }
@@ -38,11 +38,11 @@ class Payment {
       WHERE ProcessID = $6
     `;
         const res = await (0, db_1.query)(sql, [
-            data.MemberID,
-            data.Name,
-            data.PhoneNo,
-            data.Amount,
-            data.Date,
+            data.memberid,
+            data.name,
+            data.phoneno,
+            data.amount,
+            data.date,
             processID,
         ]);
         return { message: "Payment record updated", affectedRows: res.rowCount || 0 };

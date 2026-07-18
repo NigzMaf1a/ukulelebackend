@@ -6,16 +6,16 @@ class InventoryModel {
     async createInventory(data) {
         const sql = `
       INSERT INTO Inventory
-        (Price, Description, PurchaseDate, Condition, Availability)
+        (Price, Description, PurchaseDate, dCondition, Availability)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING EquipmentID
     `;
         const rows = await (0, db_1.query)(sql, [
-            data.Price,
-            data.Description,
-            data.PurchaseDate,
-            data.Condition,
-            data.Availability,
+            data.price,
+            data.description,
+            data.purchasedate,
+            data.dcondition,
+            data.availability,
         ]);
         return { message: "Inventory record created", id: rows[0].EquipmentID };
     }
@@ -26,15 +26,15 @@ class InventoryModel {
     async updateInventory(equipmentID, data) {
         const sql = `
       UPDATE Inventory
-      SET Price = $1, Description = $2, PurchaseDate = $3, Condition = $4, Availability = $5
+      SET Price = $1, Description = $2, PurchaseDate = $3, dCondition = $4, Availability = $5
       WHERE EquipmentID = $6
     `;
         const res = await (0, db_1.query)(sql, [
-            data.Price,
-            data.Description,
-            data.PurchaseDate,
-            data.Condition,
-            data.Availability,
+            data.price,
+            data.description,
+            data.purchasedate,
+            data.dcondition,
+            data.availability,
             equipmentID,
         ]);
         return { message: "Inventory record updated", affectedRows: res.rowCount || 0 };

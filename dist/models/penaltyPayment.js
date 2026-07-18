@@ -14,10 +14,10 @@ class PenaltyPayment {
       RETURNING PenaltyPaymentID
     `;
         const rows = await (0, db_1.query)(sql, [
-            data.PenaltyID,
-            data.PaymentCode,
-            data.PaymentDate,
-            data.Amount,
+            data.penaltyid,
+            data.paymentcode,
+            data.paymentdate,
+            data.amount,
         ]);
         return { message: "Penalty payment created", id: rows[0].PenaltyPaymentID };
     }
@@ -46,10 +46,10 @@ class PenaltyPayment {
       WHERE PenaltyPaymentID = $5
     `;
         const res = await (0, db_1.query)(sql, [
-            data.PenaltyID,
-            data.PaymentCode,
-            data.PaymentDate,
-            data.Amount,
+            data.penaltyid,
+            data.paymentcode,
+            data.paymentdate,
+            data.amount,
             penaltyPaymentID,
         ]);
         return { message: "Penalty payment updated", affectedRows: res.rowCount || 0 };

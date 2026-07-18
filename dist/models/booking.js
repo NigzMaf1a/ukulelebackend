@@ -10,12 +10,12 @@ class BookingModel {
       VALUES ($1, $2, $3, $4, $5, $6)
     `;
         const res = await (0, db_1.query)(sql, [
-            payload.Genre,
-            payload.BookingDate,
-            payload.Cost,
-            payload.Hours,
-            payload.ServiceID,
-            payload.BookStatus,
+            payload.genre,
+            payload.bookingdate,
+            payload.cost,
+            payload.hours,
+            payload.serviceid,
+            payload.bookstatus,
         ]);
         return { message: "Booking record created successfully", affectedRows: res.rowCount || 0 };
     }
@@ -35,12 +35,12 @@ class BookingModel {
       WHERE BookingID = $7
     `;
         const res = await (0, db_1.query)(sql, [
-            data.Genre,
-            data.BookingDate,
-            data.Cost,
-            data.Hours,
-            data.ServiceID,
-            data.BookStatus,
+            data.genre,
+            data.bookingdate,
+            data.cost,
+            data.hours,
+            data.serviceid,
+            data.bookstatus,
             bookingID,
         ]);
         return { message: `Booking ${bookingID} updated`, affectedRows: res.rowCount || 0 };
