@@ -35,7 +35,7 @@ class RegistrationModel {
                 data.accstatus ?? "Pending",
                 data.lastaccessed ?? new Date(),
             ]);
-            const regID = result.rows[0].RegID;
+            const regID = result.rows[0].regid;
             /**
              * Insert into child tables
              */
