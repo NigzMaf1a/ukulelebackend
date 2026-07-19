@@ -56,6 +56,7 @@ export interface RegistrationPayload {
   | "Inspector"
   | "Band"
   | "Admin"
+  | "Service Manager"
   | "Supplier";
   dlocation:
   | "Nairobi CBD"
