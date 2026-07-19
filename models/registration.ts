@@ -19,15 +19,15 @@ export default class RegistrationModel {
 
       await client.query("BEGIN");
 
-      // hash password
+      // Hash password
       const hashedPassword = await bcrypt.hash(data.password, 10);
 
       const sql = `
-        INSERT INTO Registration
-          (Name, PhoneNo, Email, Password, Gender, RegType, dLocation, Photo, accStatus, lastAccessed)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
-        RETURNING RegID
-      `;
+      INSERT INTO Registration
+        (Name, PhoneNo, Email, Password, Gender, RegType, dLocation, Photo, accStatus, lastAccessed)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      RETURNING RegID
+    `;
 
       const result = await client.query<{ RegID: number }>(sql, [
         data.name,
@@ -51,12 +51,13 @@ export default class RegistrationModel {
       if (data.regtype === "Customer") {
 
         const customerSql = `
-          INSERT INTO Customer
-            (RegID, Name, Email, PhoneNo)
-          VALUES ($1,$2,$3,$4)
-        `;
+        INSERT INTO Customer
+          (CustomerID, RegID, Name, Email, PhoneNo)
+        VALUES ($1, $2, $3, $4, $5)
+      `;
 
         await client.query(customerSql, [
+          regID,
           regID,
           data.name,
           data.email,
@@ -66,12 +67,13 @@ export default class RegistrationModel {
       } else {
 
         const memberSql = `
-          INSERT INTO Member
-            (RegID, Type, Name, PhoneNo, PaymentStatus)
-          VALUES ($1,$2,$3,$4,$5)
-        `;
+        INSERT INTO Member
+          (MemberID, RegID, Type, Name, PhoneNo, PaymentStatus)
+        VALUES ($1, $2, $3, $4, $5, $6)
+      `;
 
         await client.query(memberSql, [
+          regID,
           regID,
           data.regtype,
           data.name,
@@ -99,7 +101,6 @@ export default class RegistrationModel {
 
     }
   }
-
   /**
    * Read all registration records
    */
