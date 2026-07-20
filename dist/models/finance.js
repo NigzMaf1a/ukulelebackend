@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const db_1 = require("../utils/db");
 class FinanceModel {
     constructor() { }
+    //wants to bother
     async createFinance(data) {
         const sql = `
       INSERT INTO Finance
