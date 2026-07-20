@@ -29,7 +29,7 @@ export default class RegistrationModel {
       RETURNING RegID
     `;
 
-      const result = await client.query<{ RegID: number }>(sql, [
+      const result = await client.query<{ regid: number }>(sql, [
         data.name,
         data.phoneno,
         data.email,
@@ -42,7 +42,7 @@ export default class RegistrationModel {
         data.lastaccessed ?? new Date(),
       ]);
 
-      const regID = result.rows[0].RegID;
+      const regID = result.rows[0].regid;
 
       /**
        * Insert into child tables

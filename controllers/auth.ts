@@ -1,17 +1,14 @@
-// login.ts
 import { RequestHandler } from "express";
 import { query } from "../utils/db";
 import generateToken from "../utils/generateToken";
 import { UserRecord } from "../utils/generateToken";
+import bcrypt from "bcryptjs";
 
 /**
  * Represents a user record returned from the database
  */
-export interface User extends UserRecord {}
+export interface User extends UserRecord { }
 
-/**
- * Login controller (plaintext passwords)
- */
 export const login: RequestHandler = async (req, res) => {
   // Accept BOTH camelCase and PascalCase request bodies
   const emailInput = req.body.email ?? req.body.Email;
@@ -29,7 +26,6 @@ export const login: RequestHandler = async (req, res) => {
   }
 
   try {
-    // Query only required fields for efficiency
     const users = await query<UserRecord>(
       `
       SELECT
@@ -59,12 +55,24 @@ export const login: RequestHandler = async (req, res) => {
         error: "Invalid email or password",
       });
     }
-    console.log('DB user:', user);
-    console.log('Input password:', password);
-    console.log('Stored password:', user.Password);    
 
-    // Plaintext password comparison
-    if (password !== String(user.Password).trim()) {
+    console.log("DB user:", user);
+    console.log("Input password:", password);
+    console.log("Stored password:", user.Password);
+
+    const storedPassword = String(user.Password);
+    let passwordMatches = false;
+
+    // Determine whether the stored password is bcrypt or plaintext
+    if (/^\$2[aby]\$\d{2}\$/.test(storedPassword)) {
+      // bcrypt hash
+      passwordMatches = await bcrypt.compare(password, storedPassword);
+    } else {
+      // Plaintext password (temporary support for admin)
+      passwordMatches = password === storedPassword.trim();
+    }
+
+    if (!passwordMatches) {
       return res.status(401).json({
         error: "Invalid email or password",
       });
@@ -80,7 +88,6 @@ export const login: RequestHandler = async (req, res) => {
     // Generate JWT token
     const token = generateToken(user);
 
-    // Successful login response
     return res.json({
       token,
       user: {
@@ -90,8 +97,9 @@ export const login: RequestHandler = async (req, res) => {
         accStatus: user.accStatus,
       },
     });
+
   } catch (err) {
-    console.error("Login error:", (err as Error).message);
+    console.error("Login error:", err);
 
     return res.status(500).json({
       error: "Server error during login",
