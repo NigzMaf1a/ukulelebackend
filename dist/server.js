@@ -47,7 +47,8 @@ const allowedOrigins = process.env.CLIENT_ORIGIN
     : [
         "http://localhost:5173",
         "http://localhost:5000",
-        "http://localhost:3000"
+        "http://localhost:3000",
+        "https://ukulele-band-admin-14k2s9pvm-nigel-khasianis-projects.vercel.app"
     ];
 app.use((0, cors_1.default)({
     origin: (origin, callback) => {
