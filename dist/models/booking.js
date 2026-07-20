@@ -30,20 +30,20 @@ class BookingModel {
     }
     async updateBooking(bookingID, data) {
         const sql = `
-      UPDATE Booking
-      SET Genre = $1, BookingDate = $2, Cost = $3, Hours = $4, ServiceID = $5, BookStatus = $6
-      WHERE BookingID = $7
-    `;
+    UPDATE Booking
+    SET BookStatus = $1,
+        Performed = $2
+    WHERE BookingID = $3
+  `;
         const res = await (0, db_1.query)(sql, [
-            data.genre,
-            data.bookingdate,
-            data.cost,
-            data.hours,
-            data.serviceid,
             data.bookstatus,
+            data.performed,
             bookingID,
         ]);
-        return { message: `Booking ${bookingID} updated`, affectedRows: res.rowCount || 0 };
+        return {
+            message: `Booking ${bookingID} updated`,
+            affectedRows: res.rowCount || 0,
+        };
     }
     async deleteBooking(bookingID) {
         const sql = `DELETE FROM Booking WHERE BookingID = $1`;

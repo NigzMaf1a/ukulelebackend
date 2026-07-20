@@ -6,16 +6,18 @@ class FinanceModel {
     async createFinance(data) {
         const sql = `
       INSERT INTO Finance
-        (CustomerID, Name, PhoneNo, TransactionDate, Amount, TransactType, ServiceID)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+        (CustomerID, Name, PhoneNo, TransactionName,TransactionDate, TransactType, Amount, TransactType, ServiceID)
+      VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9)
       RETURNING TransactionID
     `;
         const rows = await (0, db_1.query)(sql, [
             data.customerid,
             data.name,
             data.phoneno,
+            data.transactionname,
             data.transactiondate,
             data.amount,
+            data.transactionstatus,
             data.transacttype,
             data.serviceid,
         ]);
@@ -30,23 +32,17 @@ class FinanceModel {
         const rows = await (0, db_1.query)(sql, [transactionID]);
         return rows[0];
     }
-    async updateFinance(transactionID, data) {
+    async updateFinance(transactionID) {
         const sql = `
-      UPDATE Finance
-      SET CustomerID = $1, Name = $2, PhoneNo = $3, TransactionDate = $4, Amount = $5, TransactType = $6, ServiceID = $7
-      WHERE TransactionID = $8
-    `;
-        const res = await (0, db_1.query)(sql, [
-            data.customerid,
-            data.name,
-            data.phoneno,
-            data.transactiondate,
-            data.amount,
-            data.transacttype,
-            data.serviceid,
-            transactionID,
-        ]);
-        return { message: "Finance record updated", affectedRows: res.rowCount || 0 };
+    UPDATE Finance
+    SET TransactionStatus = 'Approved'
+    WHERE TransactionID = $1
+  `;
+        const res = await (0, db_1.query)(sql, [transactionID]);
+        return {
+            message: "Payment approved successfully",
+            affectedRows: res.rowCount || 0,
+        };
     }
     async deleteFinance(transactionID) {
         const sql = `DELETE FROM Finance WHERE TransactionID = $1`;

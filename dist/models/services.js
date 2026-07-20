@@ -99,16 +99,28 @@ class ServicesModel {
         return { message: "Service updated" };
     }
     /** Update service status only */
-    async updateServiceStatus(serviceID, status) {
-        const sql = `UPDATE Services SET ServiceStatus = $1 WHERE ServiceID = $2`;
-        await (0, db_1.query)(sql, [status, serviceID]);
-        return { message: "ServiceStatus updated" };
+    async updateServiceStatus(serviceID) {
+        const sql = `
+    UPDATE Services
+    SET ServiceStatus = 'Approved'
+    WHERE ServiceID = $1
+  `;
+        await (0, db_1.query)(sql, [serviceID]);
+        return {
+            message: "Service status updated"
+        };
     }
     /** Update payment status only */
-    async updatePaymentStatus(serviceID, payment) {
-        const sql = `UPDATE Services SET PaymentStatus = $1 WHERE ServiceID = $2`;
-        await (0, db_1.query)(sql, [payment, serviceID]);
-        return { message: "PaymentStatus updated" };
+    async updatePaymentStatus(serviceID) {
+        const sql = `
+    UPDATE Services
+    SET PaymentStatus = 'Paid'
+    WHERE ServiceID = $1
+  `;
+        await (0, db_1.query)(sql, [serviceID]);
+        return {
+            message: "Payment status updated"
+        };
     }
     /** Delete service */
     async deleteService(serviceID) {

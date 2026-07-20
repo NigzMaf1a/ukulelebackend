@@ -93,7 +93,7 @@ const updateServiceStatus = async (req, res) => {
             return;
         }
         const serviceModel = new services_1.default();
-        const result = await serviceModel.updateServiceStatus(serviceID, status);
+        const result = await serviceModel.updateServiceStatus(serviceID);
         res.status(200).json(result);
     }
     catch (err) {
@@ -114,7 +114,7 @@ const updatePaymentStatus = async (req, res) => {
             return;
         }
         const serviceModel = new services_1.default();
-        const result = await serviceModel.updatePaymentStatus(serviceID, payment);
+        const result = await serviceModel.updatePaymentStatus(serviceID);
         res.status(200).json(result);
     }
     catch (err) {

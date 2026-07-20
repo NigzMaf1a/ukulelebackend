@@ -30,19 +30,20 @@ class LendingModel {
     }
     async updateLending(lendID, data) {
         const sql = `
-      UPDATE Lending
-      SET LendingDate = $1, Cost = $2, Hours = $3, ServiceID = $4, LendingStatus = $5
-      WHERE LendID = $6
-    `;
+    UPDATE Lending
+    SET LendingStatus = $1,
+        Performed = $2
+    WHERE LendID = $3
+  `;
         const res = await (0, db_1.query)(sql, [
-            data.lendingdate,
-            data.cost,
-            data.hours,
-            data.serviceid,
             data.lendingstatus,
+            data.performed,
             lendID,
         ]);
-        return { message: "Lending record updated", affectedRows: res.rowCount || 0 };
+        return {
+            message: "Lending record updated",
+            affectedRows: res.rowCount || 0,
+        };
     }
     async deleteLending(lendID) {
         const sql = `DELETE FROM Lending WHERE LendID = $1`;

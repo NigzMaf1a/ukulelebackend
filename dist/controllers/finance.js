@@ -71,7 +71,7 @@ const updateFinance = async (req, res) => {
         }
         const data = req.body;
         const financeModel = new finance_1.default();
-        const result = await financeModel.updateFinance(transactionID, data);
+        const result = await financeModel.updateFinance(transactionID);
         res.status(200).json(result);
     }
     catch (err) {
