@@ -68,7 +68,7 @@ export const updateLending = async (req: Request, res: Response) => {
       return;
     }
 
-    const data: Partial<LendingPayload> = req.body;
+    const data: Pick<LendingPayload, "lendingstatus" | "performed"> = req.body;
     const lendingModel = new LendingModel();
     const result = await lendingModel.updateLending(lendID, data);
 

@@ -70,7 +70,7 @@ export const updateFinance = async (req: Request, res: Response) => {
 
     const data: FinancePayload = req.body;
     const financeModel = new FinanceModel();
-    const result = await financeModel.updateFinance(transactionID, data);
+    const result = await financeModel.updateFinance(transactionID);
 
     res.status(200).json(result);
   } catch (err) {

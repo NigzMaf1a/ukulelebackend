@@ -95,7 +95,7 @@ export const updateServiceStatus = async (req: Request, res: Response) => {
     }
 
     const serviceModel = new ServicesModel();
-    const result = await serviceModel.updateServiceStatus(serviceID, status);
+    const result = await serviceModel.updateServiceStatus(serviceID);
 
     res.status(200).json(result);
   } catch (err) {
@@ -118,7 +118,7 @@ export const updatePaymentStatus = async (req: Request, res: Response) => {
     }
 
     const serviceModel = new ServicesModel();
-    const result = await serviceModel.updatePaymentStatus(serviceID, payment);
+    const result = await serviceModel.updatePaymentStatus(serviceID);
 
     res.status(200).json(result);
   } catch (err) {

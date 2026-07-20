@@ -37,23 +37,25 @@ export default class BookingModel {
 
   async updateBooking(
     bookingID: number,
-    data: Partial<BookingPayload>
+    data: Pick<BookingPayload, "bookstatus" | "performed">
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
-      UPDATE Booking
-      SET Genre = $1, BookingDate = $2, Cost = $3, Hours = $4, ServiceID = $5, BookStatus = $6
-      WHERE BookingID = $7
-    `;
+    UPDATE Booking
+    SET BookStatus = $1,
+        Performed = $2
+    WHERE BookingID = $3
+  `;
+
     const res = await query(sql, [
-      data.genre,
-      data.bookingdate,
-      data.cost,
-      data.hours,
-      data.serviceid,
       data.bookstatus,
+      data.performed,
       bookingID,
     ]);
-    return { message: `Booking ${bookingID} updated`, affectedRows: (res as any).rowCount || 0 };
+
+    return {
+      message: `Booking ${bookingID} updated`,
+      affectedRows: (res as any).rowCount || 0,
+    };
   }
 
   async deleteBooking(

@@ -37,22 +37,25 @@ export default class LendingModel {
 
   async updateLending(
     lendID: number,
-    data: Partial<LendingPayload>
+    data: Pick<LendingPayload, "lendingstatus" | "performed">
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
-      UPDATE Lending
-      SET LendingDate = $1, Cost = $2, Hours = $3, ServiceID = $4, LendingStatus = $5
-      WHERE LendID = $6
-    `;
+    UPDATE Lending
+    SET LendingStatus = $1,
+        Performed = $2
+    WHERE LendID = $3
+  `;
+
     const res = await query(sql, [
-      data.lendingdate,
-      data.cost,
-      data.hours,
-      data.serviceid,
       data.lendingstatus,
+      data.performed,
       lendID,
     ]);
-    return { message: "Lending record updated", affectedRows: (res as any).rowCount || 0 };
+
+    return {
+      message: "Lending record updated",
+      affectedRows: (res as any).rowCount || 0,
+    };
   }
 
   async deleteLending(

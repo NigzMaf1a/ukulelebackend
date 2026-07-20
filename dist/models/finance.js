@@ -6,7 +6,7 @@ class FinanceModel {
     async createFinance(data) {
         const sql = `
       INSERT INTO Finance
-        (CustomerID, Name, PhoneNo, TransactionName,TransactionDate, Amount, TransactType, ServiceID)
+        (CustomerID, Name, PhoneNo, TransactionName,TransactionDate, Amount, TransactStatus, ServiceID)
       VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9)
       RETURNING TransactionID
     `;
@@ -18,7 +18,6 @@ class FinanceModel {
             data.transactiondate,
             data.amount,
             data.transactionstatus,
-            data.transacttype,
             data.serviceid,
         ]);
         return { message: "Finance record created", id: rows[0].TransactionID };

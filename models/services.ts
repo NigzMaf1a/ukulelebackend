@@ -117,22 +117,36 @@ export default class ServicesModel {
 
   /** Update service status only */
   async updateServiceStatus(
-    serviceID: number,
-    status: ServicesRow["ServiceStatus"]
+    serviceID: number
   ): Promise<{ message: string }> {
-    const sql = `UPDATE Services SET ServiceStatus = $1 WHERE ServiceID = $2`;
-    await query(sql, [status, serviceID]);
-    return { message: "ServiceStatus updated" };
+    const sql = `
+    UPDATE Services
+    SET ServiceStatus = 'Approved'
+    WHERE ServiceID = $1
+  `;
+
+    await query(sql, [serviceID]);
+
+    return {
+      message: "Service status updated"
+    };
   }
 
   /** Update payment status only */
   async updatePaymentStatus(
-    serviceID: number,
-    payment: ServicesRow["PaymentStatus"]
+    serviceID: number
   ): Promise<{ message: string }> {
-    const sql = `UPDATE Services SET PaymentStatus = $1 WHERE ServiceID = $2`;
-    await query(sql, [payment, serviceID]);
-    return { message: "PaymentStatus updated" };
+    const sql = `
+    UPDATE Services
+    SET PaymentStatus = 'Paid'
+    WHERE ServiceID = $1
+  `;
+
+    await query(sql, [serviceID]);
+
+    return {
+      message: "Payment status updated"
+    };
   }
 
   /** Delete service */

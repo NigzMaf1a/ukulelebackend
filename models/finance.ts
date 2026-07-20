@@ -4,22 +4,25 @@ import { FinanceRow, FinancePayload } from "../interfaces/finance";
 export default class FinanceModel {
   constructor() { }
 
+  //wants to bother
+
   async createFinance(
     data: FinancePayload
   ): Promise<{ message: string; id: number }> {
     const sql = `
       INSERT INTO Finance
-        (CustomerID, Name, PhoneNo, TransactionDate, Amount, TransactType, ServiceID)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+        (CustomerID, Name, PhoneNo, TransactionName,TransactionDate, Amount, TransactStatus, ServiceID)
+      VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9)
       RETURNING TransactionID
     `;
     const rows = await query<{ TransactionID: number }>(sql, [
       data.customerid,
       data.name,
       data.phoneno,
+      data.transactionname,
       data.transactiondate,
       data.amount,
-      data.transacttype,
+      data.transactionstatus,
       data.serviceid,
     ]);
     return { message: "Finance record created", id: rows[0].TransactionID };
@@ -37,25 +40,20 @@ export default class FinanceModel {
   }
 
   async updateFinance(
-    transactionID: number,
-    data: FinancePayload
+    transactionID: number
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
-      UPDATE Finance
-      SET CustomerID = $1, Name = $2, PhoneNo = $3, TransactionDate = $4, Amount = $5, TransactType = $6, ServiceID = $7
-      WHERE TransactionID = $8
-    `;
-    const res = await query(sql, [
-      data.customerid,
-      data.name,
-      data.phoneno,
-      data.transactiondate,
-      data.amount,
-      data.transacttype,
-      data.serviceid,
-      transactionID,
-    ]);
-    return { message: "Finance record updated", affectedRows: (res as any).rowCount || 0 };
+    UPDATE Finance
+    SET TransactionStatus = 'Approved'
+    WHERE TransactionID = $1
+  `;
+
+    const res = await query(sql, [transactionID]);
+
+    return {
+      message: "Payment approved successfully",
+      affectedRows: (res as any).rowCount || 0,
+    };
   }
 
   async deleteFinance(

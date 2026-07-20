@@ -29,7 +29,7 @@ export default class Orders {
         data.supplyid,
         data.orderdate,
         data.orderamount,
-        data.orderstatus
+        "Processing"
       ]);
 
       const orderID = orderResult.rows[0].orderid;

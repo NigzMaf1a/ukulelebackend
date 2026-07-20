@@ -71,7 +71,7 @@ export const updateBooking = async (req: Request, res: Response) => {
       return;
     }
 
-    const data: Partial<BookingPayload> = req.body;
+    const data: Pick<BookingPayload, "bookstatus" | "performed"> = req.body;
     const bookingModel = new BookingModel();
     const result = await bookingModel.updateBooking(bookingID, data);
 
