@@ -11,7 +11,7 @@ export default class FinanceModel {
   ): Promise<{ message: string; id: number }> {
     const sql = `
       INSERT INTO Finance
-        (CustomerID, Name, PhoneNo, TransactionName,TransactionDate, Amount, TransactStatus, ServiceID)
+        (CustomerID, Name, PhoneNo, TransactionName,TransactionDate, Amount, TransactionStatus, ServiceID)
       VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9)
       RETURNING TransactionID
     `;
