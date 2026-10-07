@@ -34,6 +34,7 @@ import orderPaymentRoutes from './routes/orderPayments';
 import orderItemRoutes from './routes/orderItem';
 import orderRoutes from './routes/orders';
 import registrationRoutes from "./routes/registration";
+import faqRoutes from "./routes/faqs";
 
 
 import authMiddleware from './middleware/auth';
@@ -117,6 +118,7 @@ app.use("/api/orderPayment", orderPaymentRoutes);
 app.use("/api/orderItem", orderItemRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/registration", registrationRoutes);
+app.use('/api/faqs', faqRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Ukulele Band API is up' });
