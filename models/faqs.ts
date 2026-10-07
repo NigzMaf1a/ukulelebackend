@@ -2,6 +2,8 @@ import { query } from '../utils/db'
 
 import { FaqRow, FaqPayload } from '../interfaces/faqs'
 
+import { sendFaqAnswer } from '../utils/mail'
+
 export default class Faqs {
 
     constructor() { }
@@ -73,9 +75,19 @@ export default class Faqs {
             faqid
         ])
 
+        const affectedRows = (res as any).rowCount || 0
+
+        if (affectedRows > 0 && data.answer?.trim()) {
+            await sendFaqAnswer(
+                data.email,
+                data.question,
+                data.answer
+            )
+        }
+
         return {
             message: 'FAQ updated successfully',
-            affectedRows: (res as any).rowCount || 0
+            affectedRows
         }
     }
 
