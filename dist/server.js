@@ -37,6 +37,7 @@ const orderPayments_1 = __importDefault(require("./routes/orderPayments"));
 const orderItem_1 = __importDefault(require("./routes/orderItem"));
 const orders_1 = __importDefault(require("./routes/orders"));
 const registration_1 = __importDefault(require("./routes/registration"));
+const faqs_1 = __importDefault(require("./routes/faqs"));
 const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 const app = (0, express_1.default)();
 const PORT = Number(process.env.PORT) || 5000;
@@ -103,6 +104,7 @@ app.use("/api/orderPayment", orderPayments_1.default);
 app.use("/api/orderItem", orderItem_1.default);
 app.use("/api/orders", orders_1.default);
 app.use("/api/registration", registration_1.default);
+app.use('/api/faqs', faqs_1.default);
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Ukulele Band API is up' });
 });
