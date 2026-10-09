@@ -1,15 +1,13 @@
 import { query } from '../utils/db'
+import { sendFaqAnswer } from '../utils/mail'
 
 import { FaqRow, FaqPayload } from '../interfaces/faqs'
-
-import { sendFaqAnswer } from '../utils/mail'
 
 export default class Faqs {
 
     constructor() { }
 
     async createFaq(data: FaqPayload): Promise<{ message: string; affectedRows: number }> {
-
         const sql = `
             INSERT INTO faqs
                 (email, question, answer, approved)
@@ -30,7 +28,6 @@ export default class Faqs {
     }
 
     async readFaqs(): Promise<FaqRow[]> {
-
         const sql = `
             SELECT *
             FROM faqs
@@ -41,7 +38,6 @@ export default class Faqs {
     }
 
     async readFaq(faqid: number): Promise<FaqRow | undefined> {
-
         const sql = `
             SELECT *
             FROM faqs
@@ -57,7 +53,6 @@ export default class Faqs {
         faqid: number,
         data: FaqPayload
     ): Promise<{ message: string; affectedRows: number }> {
-
         const sql = `
             UPDATE faqs
             SET email = $1,
@@ -78,12 +73,19 @@ export default class Faqs {
         const affectedRows = (res as any).rowCount || 0
 
         if (affectedRows > 0 && data.answer?.trim()) {
-            await sendFaqAnswer(
+            sendFaqAnswer(
                 data.email,
                 data.question,
                 data.answer
-            )
+            ).catch((error: unknown) => {
+                const message = error instanceof Error
+                    ? error.message
+                    : 'Unknown error'
+
+                console.error('Failed to send FAQ answer email:', message)
+            })
         }
+
 
         return {
             message: 'FAQ updated successfully',
@@ -91,10 +93,25 @@ export default class Faqs {
         }
     }
 
-    async deleteFaq(
-        faqid: number
+    async updateFaqState(
+        faqid: number,
+        approved: 'Yes' | 'No'
     ): Promise<{ message: string; affectedRows: number }> {
+        const sql = `
+    UPDATE faqs
+    SET approved = $1
+    WHERE faqid = $2
+  `
 
+        const res = await query(sql, [approved, faqid])
+
+        return {
+            message: 'FAQ approval status updated successfully',
+            affectedRows: (res as any).rowCount || 0
+        }
+    }
+
+    async deleteFaq(faqid: number): Promise<{ message: string; affectedRows: number }> {
         const sql = `
             DELETE FROM faqs
             WHERE faqid = $1

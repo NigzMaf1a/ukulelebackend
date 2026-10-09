@@ -5,6 +5,7 @@ import {
     readFaqs,
     readFaq,
     updateFaq,
+    updateFaqState,
     deleteFaq
 } from '../controllers/faqs'
 
@@ -17,6 +18,8 @@ router.get('/get', readFaqs)
 router.get('/get/:faqid', readFaq)
 
 router.put('/update/:faqid', updateFaq)
+
+router.put('/patch/:faqid', updateFaqState)
 
 router.delete('/delete/:faqid', deleteFaq)
 
