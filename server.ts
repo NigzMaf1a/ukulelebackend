@@ -28,13 +28,15 @@ import dispatchManagerRoutes from "./routes/dispatchManager";
 import financeManagerRoutes from "./routes/financeManager";
 import bandRoutes from './routes/band';
 import adminRoutes from "./routes/admin";
-import allocatedEquipmentRoutes from './routes/allocatedEquipment';
+import allocatedEquipmentRoutes from './routes/allocatedequipment';
 import penaltyPaymentRoutes from './routes/penaltyPayment';
 import orderPaymentRoutes from './routes/orderPayments';
 import orderItemRoutes from './routes/orderItem';
 import orderRoutes from './routes/orders';
 import registrationRoutes from "./routes/registration";
 import faqRoutes from "./routes/faqs";
+import instrumentRoutes from "./routes/instruments";
+import allocatedInstrumentRoutes from "./routes/allocatedinstruments";
 
 
 import authMiddleware from './middleware/auth';
@@ -42,8 +44,6 @@ import errorHandler from './middleware/errorHandler';
 
 const app = express();
 const PORT: number = Number(process.env.PORT) || 5000;
-
-app.use(helmet());
 
 app.use(helmet());
 
@@ -119,6 +119,8 @@ app.use("/api/orderItem", orderItemRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/registration", registrationRoutes);
 app.use('/api/faqs', faqRoutes);
+app.use("/api/instruments", instrumentRoutes);
+app.use("/allocatedinstrument", allocatedInstrumentRoutes)
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Ukulele Band API is up' });
