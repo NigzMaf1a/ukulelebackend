@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const instrument_1 = require("../controllers/instrument");
+const router = (0, express_1.Router)();
+router.post("/add", instrument_1.createInstrument);
+router.get("/get", instrument_1.getAllInstruments);
+router.get("/get/byid/:instrumentID", instrument_1.getInstrumentById);
+router.put("/put/:instrumentID", instrument_1.updateInstrument);
+router.delete("/delete/:instrumentID", instrument_1.deleteInstrument);
+exports.default = router;

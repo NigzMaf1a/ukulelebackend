@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const allocatedinstrument_1 = require("../controllers/allocatedinstrument");
+const router = (0, express_1.Router)();
+router.post("/add", allocatedinstrument_1.createAllocatedInstrument);
+router.get("/get", allocatedinstrument_1.getAllAllocatedInstruments);
+router.get("/get/byid/:allocInstID", allocatedinstrument_1.getAllocatedInstrumentById);
+router.patch("/patch/:allocInstID", allocatedinstrument_1.patchAllocatedInstrument);
+router.delete("/delete/:allocInstID", allocatedinstrument_1.deleteAllocatedInstrument);
+exports.default = router;

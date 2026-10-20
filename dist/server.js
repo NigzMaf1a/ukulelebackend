@@ -31,17 +31,18 @@ const dispatchManager_1 = __importDefault(require("./routes/dispatchManager"));
 const financeManager_1 = __importDefault(require("./routes/financeManager"));
 const band_1 = __importDefault(require("./routes/band"));
 const admin_1 = __importDefault(require("./routes/admin"));
-const allocatedEquipment_1 = __importDefault(require("./routes/allocatedEquipment"));
+const allocatedequipment_1 = __importDefault(require("./routes/allocatedequipment"));
 const penaltyPayment_1 = __importDefault(require("./routes/penaltyPayment"));
 const orderPayments_1 = __importDefault(require("./routes/orderPayments"));
 const orderItem_1 = __importDefault(require("./routes/orderItem"));
 const orders_1 = __importDefault(require("./routes/orders"));
 const registration_1 = __importDefault(require("./routes/registration"));
 const faqs_1 = __importDefault(require("./routes/faqs"));
+const instruments_1 = __importDefault(require("./routes/instruments"));
+const allocatedinstruments_1 = __importDefault(require("./routes/allocatedinstruments"));
 const errorHandler_1 = __importDefault(require("./middleware/errorHandler"));
 const app = (0, express_1.default)();
 const PORT = Number(process.env.PORT) || 5000;
-app.use((0, helmet_1.default)());
 app.use((0, helmet_1.default)());
 const allowedOrigins = process.env.CLIENT_ORIGIN
     ? process.env.CLIENT_ORIGIN.split(",").map(origin => origin.trim())
@@ -98,13 +99,15 @@ app.use("/api/dispatchManager", dispatchManager_1.default);
 app.use("/api/financeManager", financeManager_1.default);
 app.use("/api/band", band_1.default);
 app.use("/api/admin", admin_1.default);
-app.use("/api/allocatedEquipment", allocatedEquipment_1.default);
+app.use("/api/allocatedEquipment", allocatedequipment_1.default);
 app.use("/api/penaltyPayment", penaltyPayment_1.default);
 app.use("/api/orderPayment", orderPayments_1.default);
 app.use("/api/orderItem", orderItem_1.default);
 app.use("/api/orders", orders_1.default);
 app.use("/api/registration", registration_1.default);
 app.use('/api/faqs', faqs_1.default);
+app.use("/api/instruments", instruments_1.default);
+app.use("/allocatedinstrument", allocatedinstruments_1.default);
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Ukulele Band API is up' });
 });

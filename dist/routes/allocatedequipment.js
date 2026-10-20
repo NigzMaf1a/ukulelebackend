@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const allocatedequipment_1 = require("../controllers/allocatedequipment");
+const router = (0, express_1.Router)();
+router.post("/add", allocatedequipment_1.createAllocatedEquipment);
+router.get("/get", allocatedequipment_1.getAllAllocatedEquipment);
+router.get("/get/byid/:allocEquipID", allocatedequipment_1.getAllocatedEquipmentById);
+router.patch("/patch/:allocEquipID", allocatedequipment_1.patchAllocatedEquipment);
+router.delete("/delete/:allocEquipID", allocatedequipment_1.deleteAllocatedEquipment);
+exports.default = router;
