@@ -107,7 +107,7 @@ app.use("/api/orders", orders_1.default);
 app.use("/api/registration", registration_1.default);
 app.use('/api/faqs', faqs_1.default);
 app.use("/api/instruments", instruments_1.default);
-app.use("/allocatedinstrument", allocatedinstruments_1.default);
+app.use("/api/allocatedinstrument", allocatedinstruments_1.default);
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Ukulele Band API is up' });
 });

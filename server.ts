@@ -120,7 +120,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/registration", registrationRoutes);
 app.use('/api/faqs', faqRoutes);
 app.use("/api/instruments", instrumentRoutes);
-app.use("/allocatedinstrument", allocatedInstrumentRoutes)
+app.use("/api/allocatedinstrument", allocatedInstrumentRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Ukulele Band API is up' });
