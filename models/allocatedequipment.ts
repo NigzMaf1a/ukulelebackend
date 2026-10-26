@@ -14,13 +14,13 @@ export default class AllocatedEquipmentModel {
   ): Promise<{ message: string; id: number }> {
     const sql = `
       WITH available_equipment AS (
-        UPDATE public.inventory
+        UPDATE inventory
         SET availability = 'Unavailable'
         WHERE equipmentid = $1
           AND availability = 'Available'
         RETURNING equipmentid
       )
-      INSERT INTO public.allocatedequipment (
+      INSERT INTO allocatedequipment (
         equipmentid,
         lendid,
         regid,
@@ -42,10 +42,10 @@ export default class AllocatedEquipmentModel {
         $8,
         $9
       FROM available_equipment ae
-      RETURNING allocequipid
+      RETURNING allocatedequipmentid
     `
 
-    const rows = await query<{ allocequipid: number }>(sql, [
+    const rows = await query<{ allocatedequipmentid: number }>(sql, [
       data.equipmentid,
       data.lendid ?? null,
       data.regid,
@@ -63,14 +63,14 @@ export default class AllocatedEquipmentModel {
 
     return {
       message: "Equipment allocation created",
-      id: rows[0].allocequipid
+      id: rows[0].allocatedequipmentid
     }
   }
 
   async readAllocatedEquipment(): Promise<AllocatedEquipmentRow[]> {
     const sql = `
       SELECT
-        ae.allocequipid,
+        ae.allocatedequipmentid,
         ae.equipmentid,
         ae.serviceid,
         ae.regid,
@@ -85,10 +85,10 @@ export default class AllocatedEquipmentModel {
         i.purchasedate AS equipmentpurchasedate,
         i.dcondition AS equipmentdcondition,
         i.availability AS equipmentavailability
-      FROM public.allocatedequipment ae
-      INNER JOIN public.inventory i
+      FROM allocatedequipment ae
+      INNER JOIN inventory i
         ON i.equipmentid = ae.equipmentid
-      ORDER BY ae.allocequipid DESC
+      ORDER BY ae.allocatedequipmentid DESC
     `
 
     return await query<AllocatedEquipmentRow>(sql)
@@ -99,7 +99,7 @@ export default class AllocatedEquipmentModel {
   ): Promise<AllocatedEquipmentRow | undefined> {
     const sql = `
       SELECT
-        ae.allocequipid,
+        ae.allocatedequipmentid,
         ae.equipmentid,
         ae.serviceid,
         ae.regid,
@@ -114,10 +114,10 @@ export default class AllocatedEquipmentModel {
         i.purchasedate AS equipmentpurchasedate,
         i.dcondition AS equipmentdcondition,
         i.availability AS equipmentavailability
-      FROM public.allocatedequipment ae
-      INNER JOIN public.inventory i
+      FROM allocatedequipment ae
+      INNER JOIN inventory i
         ON i.equipmentid = ae.equipmentid
-      WHERE ae.allocequipid = $1
+      WHERE ae.allocatedequipmentid = $1
     `
 
     const rows = await query<AllocatedEquipmentRow>(sql, [allocEquipID])
@@ -130,23 +130,23 @@ export default class AllocatedEquipmentModel {
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
       WITH updated_allocation AS (
-        UPDATE public.allocatedequipment
+        UPDATE allocatedequipment
         SET
           alloc_status = $1,
           conditionatreturn = $2,
           returndate = $3
-        WHERE allocequipid = $4
-        RETURNING allocequipid, equipmentid, alloc_status
+        WHERE allocatedequipmentid = $4
+        RETURNING allocatedequipmentid, equipmentid, alloc_status
       ),
       updated_inventory AS (
-        UPDATE public.inventory i
+        UPDATE inventory i
         SET availability = CASE
           WHEN ua.alloc_status IN ('Returned', 'Cancelled')
             AND NOT EXISTS (
               SELECT 1
-              FROM public.allocatedequipment other
+              FROM allocatedequipment other
               WHERE other.equipmentid = ua.equipmentid
-                AND other.allocequipid <> ua.allocequipid
+                AND other.allocatedequipmentid <> ua.allocatedequipmentid
                 AND other.alloc_status NOT IN ('Returned', 'Cancelled')
             )
           THEN 'Available'
@@ -156,13 +156,13 @@ export default class AllocatedEquipmentModel {
         WHERE i.equipmentid = ua.equipmentid
         RETURNING i.equipmentid
       )
-      SELECT ua.allocequipid
+      SELECT ua.allocatedequipmentid
       FROM updated_allocation ua
       INNER JOIN updated_inventory ui
         ON ui.equipmentid = ua.equipmentid
     `
 
-    const rows = await query<{ allocequipid: number }>(sql, [
+    const rows = await query<{ allocatedequipmentid: number }>(sql, [
       data.alloc_status,
       data.conditionatreturn ?? null,
       data.returndate ?? null,
@@ -180,33 +180,35 @@ export default class AllocatedEquipmentModel {
   ): Promise<{ message: string; affectedRows: number }> {
     const sql = `
       WITH deleted_allocation AS (
-        DELETE FROM public.allocatedequipment
-        WHERE allocequipid = $1
-        RETURNING allocequipid, equipmentid
+        DELETE FROM allocatedequipment
+        WHERE allocatedequipmentid = $1
+        RETURNING allocatedequipmentid, equipmentid
       ),
       updated_inventory AS (
-        UPDATE public.inventory i
+        UPDATE inventory i
         SET availability = CASE
           WHEN EXISTS (
             SELECT 1
-            FROM public.allocatedequipment other
-            WHERE other.equipmentid = deleted_allocation.equipmentid
+            FROM allocatedequipment other
+            WHERE other.equipmentid = da.equipmentid
               AND other.alloc_status NOT IN ('Returned', 'Cancelled')
           )
           THEN 'Unavailable'
           ELSE 'Available'
         END
-        FROM deleted_allocation
-        WHERE i.equipmentid = deleted_allocation.equipmentid
+        FROM deleted_allocation da
+        WHERE i.equipmentid = da.equipmentid
         RETURNING i.equipmentid
       )
-      SELECT da.allocequipid
+      SELECT da.allocatedequipmentid
       FROM deleted_allocation da
       INNER JOIN updated_inventory ui
         ON ui.equipmentid = da.equipmentid
     `
 
-    const rows = await query<{ allocequipid: number }>(sql, [allocEquipID])
+    const rows = await query<{ allocatedequipmentid: number }>(sql, [
+      allocEquipID
+    ])
 
     return {
       message: "Equipment allocation deleted",

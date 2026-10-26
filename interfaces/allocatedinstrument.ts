@@ -12,7 +12,7 @@ export type AllocationStatus =
 export type InstrumentCondition = "CAT1" | "CAT2" | "CAT3" | "CAT4"
 
 export interface AllocatedInstrumentRow extends RowDataPacket {
-    allocinstid: number
+    allocatedequipmentid: number
     instrumentid: number
     serviceid: number
     regid: number

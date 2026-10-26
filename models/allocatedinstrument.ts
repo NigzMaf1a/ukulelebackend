@@ -1,26 +1,26 @@
 
 import { query } from "../utils/db"
 import {
-    AllocatedInstrumentRow,
-    AllocatedInstrumentPayload,
-    AllocatedInstrumentPatch
+  AllocatedInstrumentRow,
+  AllocatedInstrumentPayload,
+  AllocatedInstrumentPatch
 } from "../interfaces/allocatedinstrument"
 
 export default class AllocatedInstrumentModel {
-    constructor() { }
+  constructor() { }
 
-    async createAllocatedInstrument(
-        data: AllocatedInstrumentPayload
-    ): Promise<{ message: string; id: number }> {
-        const sql = `
+  async createAllocatedInstrument(
+    data: AllocatedInstrumentPayload
+  ): Promise<{ message: string; id: number }> {
+    const sql = `
       WITH available_instrument AS (
-        UPDATE public.instrument
+        UPDATE instrument
         SET availability = 'Unavailable'
         WHERE instrumentid = $1
           AND availability = 'Available'
         RETURNING instrumentid
       )
-      INSERT INTO public.allocatedinstrument (
+      INSERT INTO allocatedinstrument (
         instrumentid,
         serviceid,
         regid,
@@ -45,30 +45,30 @@ export default class AllocatedInstrumentModel {
       RETURNING allocinstid
     `
 
-        const rows = await query<{ allocinstid: number }>(sql, [
-            data.instrumentid,
-            data.serviceid,
-            data.regid,
-            data.lendid ?? null,
-            data.alloc_status,
-            data.conditionatalloc,
-            data.conditionatreturn ?? null,
-            data.allocdate,
-            data.returndate ?? null
-        ])
+    const rows = await query<{ allocinstid: number }>(sql, [
+      data.instrumentid,
+      data.serviceid,
+      data.regid,
+      data.lendid ?? null,
+      data.alloc_status,
+      data.conditionatalloc,
+      data.conditionatreturn ?? null,
+      data.allocdate,
+      data.returndate ?? null
+    ])
 
-        if (!rows.length) {
-            throw new Error("Instrument is unavailable or does not exist")
-        }
-
-        return {
-            message: "Instrument allocation created",
-            id: rows[0].allocinstid
-        }
+    if (!rows.length) {
+      throw new Error("Instrument is unavailable or does not exist")
     }
 
-    async readAllocatedInstruments(): Promise<AllocatedInstrumentRow[]> {
-        const sql = `
+    return {
+      message: "Instrument allocation created",
+      id: rows[0].allocinstid
+    }
+  }
+
+  async readAllocatedInstruments(): Promise<AllocatedInstrumentRow[]> {
+    const sql = `
       SELECT
         ai.allocinstid,
         ai.instrumentid,
@@ -85,19 +85,19 @@ export default class AllocatedInstrumentModel {
         i.purchasedate AS instrumentpurchasedate,
         i.dcondition AS instrumentdcondition,
         i.availability AS instrumentavailability
-      FROM public.allocatedinstrument ai
-      INNER JOIN public.instrument i
+      FROM allocatedinstrument ai
+      INNER JOIN instrument i
         ON i.instrumentid = ai.instrumentid
       ORDER BY ai.allocinstid DESC
     `
 
-        return await query<AllocatedInstrumentRow>(sql)
-    }
+    return await query<AllocatedInstrumentRow>(sql)
+  }
 
-    async getAllocatedInstrumentData(
-        allocInstID: number
-    ): Promise<AllocatedInstrumentRow | undefined> {
-        const sql = `
+  async getAllocatedInstrumentData(
+    allocInstID: number
+  ): Promise<AllocatedInstrumentRow | undefined> {
+    const sql = `
       SELECT
         ai.allocinstid,
         ai.instrumentid,
@@ -114,23 +114,23 @@ export default class AllocatedInstrumentModel {
         i.purchasedate AS instrumentpurchasedate,
         i.dcondition AS instrumentdcondition,
         i.availability AS instrumentavailability
-      FROM public.allocatedinstrument ai
-      INNER JOIN public.instrument i
+      FROM allocatedinstrument ai
+      INNER JOIN instrument i
         ON i.instrumentid = ai.instrumentid
       WHERE ai.allocinstid = $1
     `
 
-        const rows = await query<AllocatedInstrumentRow>(sql, [allocInstID])
-        return rows[0]
-    }
+    const rows = await query<AllocatedInstrumentRow>(sql, [allocInstID])
+    return rows[0]
+  }
 
-    async patchAllocatedInstrument(
-        allocInstID: number,
-        data: AllocatedInstrumentPatch
-    ): Promise<{ message: string; affectedRows: number }> {
-        const sql = `
+  async patchAllocatedInstrument(
+    allocInstID: number,
+    data: AllocatedInstrumentPatch
+  ): Promise<{ message: string; affectedRows: number }> {
+    const sql = `
       WITH updated_allocation AS (
-        UPDATE public.allocatedinstrument
+        UPDATE allocatedinstrument
         SET
           alloc_status = $1,
           conditionatreturn = $2,
@@ -139,10 +139,17 @@ export default class AllocatedInstrumentModel {
         RETURNING allocinstid, instrumentid, alloc_status
       ),
       updated_instrument AS (
-        UPDATE public.instrument i
+        UPDATE instrument i
         SET availability = CASE
           WHEN ua.alloc_status IN ('Returned', 'Cancelled')
-            THEN 'Available'
+            AND NOT EXISTS (
+              SELECT 1
+              FROM allocatedinstrument other
+              WHERE other.instrumentid = ua.instrumentid
+                AND other.allocinstid <> ua.allocinstid
+                AND other.alloc_status NOT IN ('Returned', 'Cancelled')
+            )
+          THEN 'Available'
           ELSE 'Unavailable'
         END
         FROM updated_allocation ua
@@ -155,31 +162,40 @@ export default class AllocatedInstrumentModel {
         ON ui.instrumentid = ua.instrumentid
     `
 
-        const rows = await query<{ allocinstid: number }>(sql, [
-            data.alloc_status,
-            data.conditionatreturn ?? null,
-            data.returndate ?? null,
-            allocInstID
-        ])
+    const rows = await query<{ allocinstid: number }>(sql, [
+      data.alloc_status,
+      data.conditionatreturn ?? null,
+      data.returndate ?? null,
+      allocInstID
+    ])
 
-        return {
-            message: "Instrument allocation updated",
-            affectedRows: rows.length
-        }
+    return {
+      message: "Instrument allocation updated",
+      affectedRows: rows.length
     }
+  }
 
-    async deleteAllocatedInstrument(
-        allocInstID: number
-    ): Promise<{ message: string; affectedRows: number }> {
-        const sql = `
+  async deleteAllocatedInstrument(
+    allocInstID: number
+  ): Promise<{ message: string; affectedRows: number }> {
+    const sql = `
       WITH deleted_allocation AS (
-        DELETE FROM public.allocatedinstrument
+        DELETE FROM allocatedinstrument
         WHERE allocinstid = $1
         RETURNING allocinstid, instrumentid
       ),
       updated_instrument AS (
-        UPDATE public.instrument i
-        SET availability = 'Available'
+        UPDATE instrument i
+        SET availability = CASE
+          WHEN EXISTS (
+            SELECT 1
+            FROM allocatedinstrument other
+            WHERE other.instrumentid = da.instrumentid
+              AND other.alloc_status NOT IN ('Returned', 'Cancelled')
+          )
+          THEN 'Unavailable'
+          ELSE 'Available'
+        END
         FROM deleted_allocation da
         WHERE i.instrumentid = da.instrumentid
         RETURNING i.instrumentid
@@ -190,11 +206,11 @@ export default class AllocatedInstrumentModel {
         ON ui.instrumentid = da.instrumentid
     `
 
-        const rows = await query<{ allocinstid: number }>(sql, [allocInstID])
+    const rows = await query<{ allocinstid: number }>(sql, [allocInstID])
 
-        return {
-            message: "Instrument allocation deleted",
-            affectedRows: rows.length
-        }
+    return {
+      message: "Instrument allocation deleted",
+      affectedRows: rows.length
     }
+  }
 }
