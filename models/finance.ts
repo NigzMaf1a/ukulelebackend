@@ -9,12 +9,24 @@ export default class FinanceModel {
   async createFinance(
     data: FinancePayload
   ): Promise<{ message: string; id: number }> {
+
     const sql = `
-      INSERT INTO Finance
-        (CustomerID, Name, PhoneNo, TransactionName,TransactionDate, Amount, TransactionStatus, ServiceID)
-      VALUES ($1, $2, $3, $4, $5, $6, $7,$8,$9)
-      RETURNING TransactionID
-    `;
+        INSERT INTO Finance
+            (
+                CustomerID,
+                Name,
+                PhoneNo,
+                TransactionName,
+                TransactionDate,
+                Amount,
+                TransactionStatus,
+                TransactType,
+                ServiceID
+            )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING TransactionID
+    `
+
     const rows = await query<{ TransactionID: number }>(sql, [
       data.customerid,
       data.name,
@@ -23,9 +35,14 @@ export default class FinanceModel {
       data.transactiondate,
       data.amount,
       data.transactionstatus,
-      data.serviceid,
-    ]);
-    return { message: "Finance record created", id: rows[0].TransactionID };
+      data.transacttype,
+      data.serviceid
+    ])
+
+    return {
+      message: "Finance record created",
+      id: rows[0].TransactionID
+    }
   }
 
   async readFinance(): Promise<FinanceRow[]> {
