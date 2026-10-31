@@ -6,13 +6,13 @@ class AllocatedInstrumentModel {
     async createAllocatedInstrument(data) {
         const sql = `
       WITH available_instrument AS (
-        UPDATE public.instrument
+        UPDATE instrument
         SET availability = 'Unavailable'
         WHERE instrumentid = $1
           AND availability = 'Available'
         RETURNING instrumentid
       )
-      INSERT INTO public.allocatedinstrument (
+      INSERT INTO allocatedinstrument (
         instrumentid,
         serviceid,
         regid,
@@ -73,8 +73,8 @@ class AllocatedInstrumentModel {
         i.purchasedate AS instrumentpurchasedate,
         i.dcondition AS instrumentdcondition,
         i.availability AS instrumentavailability
-      FROM public.allocatedinstrument ai
-      INNER JOIN public.instrument i
+      FROM allocatedinstrument ai
+      INNER JOIN instrument i
         ON i.instrumentid = ai.instrumentid
       ORDER BY ai.allocinstid DESC
     `;
@@ -98,8 +98,8 @@ class AllocatedInstrumentModel {
         i.purchasedate AS instrumentpurchasedate,
         i.dcondition AS instrumentdcondition,
         i.availability AS instrumentavailability
-      FROM public.allocatedinstrument ai
-      INNER JOIN public.instrument i
+      FROM allocatedinstrument ai
+      INNER JOIN instrument i
         ON i.instrumentid = ai.instrumentid
       WHERE ai.allocinstid = $1
     `;
@@ -109,7 +109,7 @@ class AllocatedInstrumentModel {
     async patchAllocatedInstrument(allocInstID, data) {
         const sql = `
       WITH updated_allocation AS (
-        UPDATE public.allocatedinstrument
+        UPDATE allocatedinstrument
         SET
           alloc_status = $1,
           conditionatreturn = $2,
@@ -118,10 +118,17 @@ class AllocatedInstrumentModel {
         RETURNING allocinstid, instrumentid, alloc_status
       ),
       updated_instrument AS (
-        UPDATE public.instrument i
+        UPDATE instrument i
         SET availability = CASE
           WHEN ua.alloc_status IN ('Returned', 'Cancelled')
-            THEN 'Available'
+            AND NOT EXISTS (
+              SELECT 1
+              FROM allocatedinstrument other
+              WHERE other.instrumentid = ua.instrumentid
+                AND other.allocinstid <> ua.allocinstid
+                AND other.alloc_status NOT IN ('Returned', 'Cancelled')
+            )
+          THEN 'Available'
           ELSE 'Unavailable'
         END
         FROM updated_allocation ua
@@ -147,13 +154,22 @@ class AllocatedInstrumentModel {
     async deleteAllocatedInstrument(allocInstID) {
         const sql = `
       WITH deleted_allocation AS (
-        DELETE FROM public.allocatedinstrument
+        DELETE FROM allocatedinstrument
         WHERE allocinstid = $1
         RETURNING allocinstid, instrumentid
       ),
       updated_instrument AS (
-        UPDATE public.instrument i
-        SET availability = 'Available'
+        UPDATE instrument i
+        SET availability = CASE
+          WHEN EXISTS (
+            SELECT 1
+            FROM allocatedinstrument other
+            WHERE other.instrumentid = da.instrumentid
+              AND other.alloc_status NOT IN ('Returned', 'Cancelled')
+          )
+          THEN 'Unavailable'
+          ELSE 'Available'
+        END
         FROM deleted_allocation da
         WHERE i.instrumentid = da.instrumentid
         RETURNING i.instrumentid
