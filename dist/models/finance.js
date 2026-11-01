@@ -56,6 +56,9 @@ class FinanceModel {
                     FOR UPDATE
                 `, [transactionID]);
             const payment = paymentResult.rows[0];
+            console.log("Approval transaction ID:", transactionID);
+            console.log("Raw payment query result:", payment);
+            console.log("Retrieved ServiceID:", payment?.ServiceID);
             if (!payment) {
                 await client.query("ROLLBACK");
                 return {
