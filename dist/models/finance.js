@@ -50,15 +50,15 @@ class FinanceModel {
         try {
             await client.query("BEGIN");
             const paymentResult = await client.query(`
-                    SELECT ServiceID
-                    FROM Finance
-                    WHERE TransactionID = $1
-                    FOR UPDATE
-                `, [transactionID]);
+                SELECT ServiceID
+                FROM Finance
+                WHERE TransactionID = $1
+                FOR UPDATE
+            `, [transactionID]);
             const payment = paymentResult.rows[0];
             console.log("Approval transaction ID:", transactionID);
             console.log("Raw payment query result:", payment);
-            console.log("Retrieved ServiceID:", payment?.ServiceID);
+            console.log("Retrieved ServiceID:", payment?.serviceid);
             if (!payment) {
                 await client.query("ROLLBACK");
                 return {
@@ -67,19 +67,19 @@ class FinanceModel {
                 };
             }
             const financeResult = await client.query(`
-                    UPDATE Finance
-                    SET TransactionStatus = 'Approved'
-                    WHERE TransactionID = $1
-                    RETURNING TransactionID
-                `, [transactionID]);
-            if (payment.ServiceID !== null) {
+                UPDATE Finance
+                SET TransactionStatus = 'Approved'
+                WHERE TransactionID = $1
+                RETURNING TransactionID
+            `, [transactionID]);
+            if (payment.serviceid !== null) {
                 const serviceResult = await client.query(`
-                        UPDATE Services
-                        SET PaymentStatus = 'Paid'
-                        WHERE ServiceID = $1
-                    `, [payment.ServiceID]);
+                    UPDATE Services
+                    SET PaymentStatus = 'Paid'
+                    WHERE ServiceID = $1
+                `, [payment.serviceid]);
                 if (serviceResult.rowCount === 0) {
-                    throw new Error(`Associated service ${payment.ServiceID} was not found`);
+                    throw new Error(`Associated service ${payment.serviceid} was not found`);
                 }
             }
             await client.query("COMMIT");
